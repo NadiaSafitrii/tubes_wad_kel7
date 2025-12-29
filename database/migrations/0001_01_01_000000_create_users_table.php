@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); // ID User
-            $table->string('name'); // Nama
-            $table->string('email')->unique(); // <--- KOLOM INI YANG TADI HILANG
+            $table->id(); 
+            $table->string('name'); 
+            $table->string('email')->unique(); 
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password'); // Password
+            $table->string('password'); 
             
-            // Kolom tambahan untuk role & nim
+            
             $table->enum('role', ['admin', 'peminjam'])->default('peminjam');
             $table->string('nim')->nullable();
             
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Tabel Reset Password & Session (Bawaan Laravel, biarkan saja)
+        // Tabel Reset Password & Session 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

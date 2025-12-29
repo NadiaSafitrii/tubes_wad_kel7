@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('pertanyaans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable(); // Siapa yang bertanya
-            $table->string('subjek'); // Bisa nama barang atau fasilitas
-            $table->text('pertanyaan'); // Isi pertanyaan
-            $table->text('jawaban')->nullable(); // Jawaban admin (kosong di awal)
+            $table->unsignedBigInteger('user_id')->nullable(); 
+            $table->string('subjek'); 
+            $table->text('pertanyaan'); 
+            $table->text('jawaban')->nullable(); 
             $table->enum('status', ['Pending', 'Dijawab'])->default('Pending');
             $table->timestamps();
         });

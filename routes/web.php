@@ -6,18 +6,18 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\QnaController;
 use App\Http\Controllers\AuthController;
 
-// --- 1. HALAMAN LOGIN ---
+// --- 1. Halaman Login ---
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login'); // Halaman awal jadi login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// --- 2. HALAMAN YANG BUTUH LOGIN (Group Middleware) ---
+// --- 2. Halaman yang perlu login ---
 Route::middleware(['auth'])->group(function () {
 
     // --- ADMIN ---
-  
+      
     // Kelola Barang
     Route::get('/ketersediaan', [PeminjamanController::class, 'index'])->name('ketersediaan'); // Dashboard Utama
     
@@ -56,4 +56,14 @@ Route::middleware(['auth'])->group(function () {
     // 5. Route untuk status
     Route::get('/mahasiswa/status', [PeminjamanController::class, 'status'])->name('peminjaman.status');
     Route::get('/mahasiswa/status/update', [PeminjamanController::class, 'checkStatusUpdate'])->name('peminjaman.update');
+  
+    // QnA
+    // 1. Tampilkan Halaman QnA
+    Route::get('/mahasiswa/qna', [PeminjamanController::class, 'qnaMahasiswa'])->name('mahasiswa.qna');
+
+    // 2. Kirim Pertanyaan (POST)
+    Route::post('/mahasiswa/qna/store', [PeminjamanController::class, 'storeQna'])->name('qna.store');
+
+    // 3. Riwayat
+    Route::get('/mahasiswa/riwayat', [PeminjamanController::class, 'riwayatMahasiswa'])->name('mahasiswa.riwayat');
 });

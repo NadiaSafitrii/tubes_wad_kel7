@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('barangs', function (Blueprint $table) {
             $table->id();
             $table->string('nama_barang');
-            $table->string('kategori'); // Elektronik, Ruangan, dll
+            $table->string('kategori'); 
             $table->string('lokasi');
             $table->text('spesifikasi');
-            $table->string('gambar')->nullable(); // Untuk foto barang
+            $table->string('gambar')->nullable(); 
             $table->enum('status', ['Tersedia', 'Dipinjam', 'Perbaikan'])->default('Tersedia');
             $table->timestamps();
         });

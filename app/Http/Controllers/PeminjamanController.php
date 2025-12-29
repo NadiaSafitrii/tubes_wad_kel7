@@ -56,7 +56,8 @@ class PeminjamanController extends Controller
             'file_surat'      => $fileName,
             'status_approval' => 'Pending',
         ]);
-    
+
+        // Tampilkan pesan sukses
         return back()->with('success', 'Permintaan berhasil dikirim! Silakan isi lagi jika ingin meminjam barang lain.');
     }
 
@@ -108,6 +109,7 @@ class PeminjamanController extends Controller
     // 9. Tampilkan Halaman QnA (List Pertanyaan Saya)
     public function qnaMahasiswa()
     {
+        // Ambil data QnA milik user yang sedang login, urutkan dari yang terbaru
         $dataQna = Qna::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
         
         return view('mahasiswa_qna', compact('dataQna'));
@@ -130,6 +132,8 @@ class PeminjamanController extends Controller
 
         return back()->with('success', 'Pertanyaan terkirim! Admin akan segera menjawabnya.');
     }
+
+    // Ambil data peminjaman milik user login, beserta data barangnya
     public function riwayatMahasiswa()
     {
         $riwayats = Peminjaman::with('barang')
@@ -159,4 +163,5 @@ class PeminjamanController extends Controller
 
         return view('partials.status_list', compact('peminjamans'))->render();
     }
+    
 }
