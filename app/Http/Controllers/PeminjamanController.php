@@ -143,4 +143,6 @@ class PeminjamanController extends Controller
 
         return view('mahasiswa_riwayat', compact('riwayats'));
     }
+
+    
 }
