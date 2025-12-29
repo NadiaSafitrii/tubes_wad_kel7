@@ -144,5 +144,24 @@ class PeminjamanController extends Controller
         return view('mahasiswa_riwayat', compact('riwayats'));
     }
 
+    public function status()
+    {
+        $peminjamans = Peminjaman::with('barang')
+                        ->where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('status', compact('peminjamans')); 
+    }
+
+    public function checkStatusUpdate()
+    {
+        $peminjamans = Peminjaman::with('barang')
+                        ->where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('partials.status_list', compact('peminjamans'))->render();
+    }
     
 }
