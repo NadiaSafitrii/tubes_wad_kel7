@@ -9,7 +9,7 @@ class Peminjaman extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $table = 'peminjamans'; // Memastikan nama tabel benar
+    protected $table = 'peminjamans'; 
 
     // Relasi: Satu peminjaman dimiliki oleh satu User
     public function user()

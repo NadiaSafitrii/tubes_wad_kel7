@@ -16,9 +16,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // --- 2. HALAMAN YANG BUTUH LOGIN (Group Middleware) ---
 Route::middleware(['auth'])->group(function () {
 
-    // --- AREA ADMIN ---
-    // (Idealnya kita buat middleware 'admin' sendiri, tapi sementara kita gabung dulu)
-    
+    // --- ADMIN ---
+  
     // Kelola Barang
     Route::get('/ketersediaan', [PeminjamanController::class, 'index'])->name('ketersediaan'); // Dashboard Utama
     
@@ -39,6 +38,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/qna/{id}/jawab', [QnaController::class, 'jawab'])->name('admin.jawab');
     Route::delete('/admin/qna/{id}/hapus', [QnaController::class, 'destroy'])->name('admin.hapus');
     
+    // --- User ---
+
     // 1. Dashboard Utama (Halaman Selamat Datang)
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
     
@@ -51,4 +52,8 @@ Route::middleware(['auth'])->group(function () {
 
     // 4. Route Halaman Sukses
     Route::get('/pinjam/sukses', [PeminjamanController::class, 'sukses'])->name('peminjaman.sukses');
+
+    // 5. Route untuk status
+    Route::get('/mahasiswa/status', [PeminjamanController::class, 'status'])->name('peminjaman.status');
+    Route::get('/mahasiswa/status/update', [PeminjamanController::class, 'checkStatusUpdate'])->name('peminjaman.update');
 });
