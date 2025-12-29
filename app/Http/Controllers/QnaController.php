@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pertanyaan;
+use App\Models\Qna; 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class QnaController extends Controller
 {
-    // --- ADMIN AREA ---
+    // --- Admin Qna ---
 
     // 1. Admin melihat daftar pertanyaan
     public function indexAdmin()
     {
-        // Ambil pertanyaan, urutkan yang terbaru di atas
-        $pertanyaans = Pertanyaan::with('user')
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+        // Ambil data dari tabel qnas, urutkan yang terbaru
+        $qnaList = Qna::with('user')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
-        return view('admin_qna', compact('pertanyaans'));
+        // Pastikan variabel yang dikirim adalah 'qnaList'
+        return view('admin_qna', compact('qnaList'));
     }
 
     // 2. Admin menjawab pertanyaan
@@ -28,38 +30,40 @@ class QnaController extends Controller
             'jawaban' => 'required'
         ]);
 
-        $qna = Pertanyaan::findOrFail($id);
+        $qna = Qna::findOrFail($id);
         $qna->update([
             'jawaban' => $request->jawaban,
-            'status'  => 'Dijawab'
+            'status'  => 'Dijawab' // Status harus sesuai dengan Enum di database
         ]);
 
         return redirect()->route('admin.qna')->with('success', 'Jawaban berhasil dikirim!');
     }
 
-    // 3. Admin menghapus pertanyaan (sesuai proposal CRUD Delete)
+    // 3. Admin menghapus pertanyaan
     public function destroy($id)
     {
-        $qna = Pertanyaan::findOrFail($id);
+        $qna = Qna::findOrFail($id);
         $qna->delete();
 
         return redirect()->route('admin.qna')->with('success', 'Pertanyaan dihapus.');
     }
 
-    // --- USER AREA (SIMULASI UNTUK TES) ---
+    // --- User Qna ---
     
-    // 4. User mengirim pertanyaan (Create)
-    // Kita buat fungsi ini agar kamu bisa tes input pertanyaan dummy
     public function storeTanya(Request $request)
     {
-        Pertanyaan::create([
-            'user_id' => 1, // Dummy User ID
-            'subjek' => $request->subjek ?? 'Umum',
+        $request->validate([
+            'subjek' => 'required',
+            'pertanyaan' => 'required'
+        ]);
+
+        Qna::create([
+            'user_id' => Auth::id(), 
+            'subjek' => $request->subjek,
             'pertanyaan' => $request->pertanyaan,
-            'status' => 'Pending'
+            'status' => 'Terkirim'
         ]);
         
-        // Kembali ke halaman admin saja biar gampang tesnya
-        return redirect()->back()->with('success', 'Pertanyaan dummy berhasil masuk!');
+        return redirect()->back()->with('success', 'Pertanyaan berhasil dikirim!');
     }
 }

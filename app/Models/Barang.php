@@ -9,6 +9,5 @@ class Barang extends Model
 {
     use HasFactory;
     
-    // protected $guarded = []; artinya semua kolom boleh diisi (mass assignment)
     protected $guarded = []; 
 }

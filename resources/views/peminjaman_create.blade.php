@@ -35,9 +35,8 @@
                 <a href="{{ route('mahasiswa.ketersediaan') }}"> <i class="fas fa-search me-2"></i> Cek Ketersediaan </a>
                 <a href="{{ route('peminjaman.create') }}" class="active"> <i class="fas fa-file-signature me-2"></i> Ajukan Peminjaman </a>
                 <a href="#"> <i class="fas fa-info-circle me-2"></i> Status </a>
-                <a href="#"> <i class="fas fa-history me-2"></i> Riwayat </a>
-                <a href="#"> <i class="fas fa-comments me-2"></i> QnA </a>
-
+                <a href="{{ route('mahasiswa.riwayat') }}"> <i class="fas fa-history me-2"></i> Riwayat </a>
+                <a href="{{ route('mahasiswa.qna') }}"> <i class="fas fa-comments me-2"></i> QnA </a>
                 <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
                     <button type="submit" class="btn btn-link text-danger text-decoration-none ps-3 pt-3 w-100 text-start">

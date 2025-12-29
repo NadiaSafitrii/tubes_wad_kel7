@@ -9,39 +9,11 @@
     
     <style>
         body { background-color: #f4f6f9; overflow-x: hidden; }
-        .sidebar {
-            min-height: 100vh;
-            background-color: #ffffff;
-            color: #333;
-            border-right: 1px solid #dee2e6;
-        }
-        .sidebar a {
-            color: #555;
-            text-decoration: none;
-            display: block;
-            padding: 12px 20px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: 0.3s;
-            font-weight: 500;
-        }
-        .sidebar a:hover {
-            background-color: #f8f9fa;
-            color: #b30000;
-            padding-left: 25px; 
-        }
-        .sidebar .active {
-            background-color: #b30000;
-            color: white !important;
-            font-weight: bold;
-            border-left: 5px solid #8a0000;
-        }
-        .sidebar .active:hover { color: white !important; }
-        .admin-header {
-            background-color: #fff;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #dee2e6;
-        }
+        .sidebar { min-height: 100vh; background-color: #ffffff; color: #333; border-right: 1px solid #dee2e6; }
+        .sidebar a { color: #555; text-decoration: none; display: block; padding: 12px 20px; border-bottom: 1px solid #f0f0f0; transition: 0.3s; font-weight: 500; }
+        .sidebar a:hover { background-color: #f8f9fa; color: #b30000; padding-left: 25px; }
+        .sidebar .active { background-color: #b30000; color: white !important; font-weight: bold; border-left: 5px solid #8a0000; }
+        .admin-header { background-color: #fff; padding: 15px 20px; margin-bottom: 20px; border-bottom: 1px solid #dee2e6; }
     </style>
 </head>
 <body>
@@ -74,14 +46,13 @@
                  <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
                     <button type="submit" class="btn btn-link text-danger text-decoration-none ps-3 pt-3 w-100 text-start">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </button>
                 </form>
             </nav>
         </div>
 
         <div class="col-md-10 p-0">
-            
             <div class="admin-header d-flex justify-content-between align-items-center">
                 <h4 class="m-0 fw-bold text-dark fs-5">Tanya Jawab (QnA)</h4>
                 <div class="user-info">
@@ -100,9 +71,9 @@
                 @endif
 
                 <div class="row">
-                    @forelse($pertanyaans as $q)
+                    @forelse($qnaList as $q)
                     <div class="col-12 mb-3">
-                        <div class="card shadow-sm border-0">
+                        <div class="card shadow-sm border-0" style="border-left: 5px solid {{ $q->status == 'Dijawab' ? '#198754' : '#ffc107' }} !important;">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                                 <div>
                                     <span class="badge {{ $q->status == 'Dijawab' ? 'bg-success' : 'bg-warning text-dark' }}">
@@ -120,7 +91,7 @@
                             <div class="card-body">
                                 <p class="card-text fw-bold text-dark mb-3">"{{ $q->pertanyaan }}"</p>
 
-                                @if($q->status == 'Dijawab')
+                                @if($q->status == 'Dijawab' || $q->jawaban)
                                     <div class="alert alert-info border-0 bg-opacity-10 bg-primary mb-0">
                                         <i class="fas fa-reply me-2"></i> <strong>Jawaban Admin:</strong><br>
                                         {{ $q->jawaban }}
@@ -141,11 +112,9 @@
                     <div class="col-12 text-center py-5">
                         <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>
                         <h6 class="text-muted">Belum ada pertanyaan masuk.</h6>
-                        <small class="text-muted">Daftar pertanyaan dari mahasiswa akan muncul di sini.</small>
                     </div>
                     @endforelse
                 </div>
-
             </div>
         </div>
     </div>

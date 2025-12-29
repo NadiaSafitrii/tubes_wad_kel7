@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Peminjaman; 
 use App\Models\Barang;
 use App\Models\User;
+use App\Models\Qna;
 use Illuminate\Support\Facades\Auth; 
 
 class PeminjamanController extends Controller
@@ -56,8 +57,7 @@ class PeminjamanController extends Controller
             'status_approval' => 'Pending',
         ]);
 
-        // --- PERUBAHAN DI SINI ---
-        // Kembali ke halaman form (refresh) dan tampilkan pesan sukses
+        // Tampilkan pesan sukses
         return back()->with('success', 'Permintaan berhasil dikirim! Silakan isi lagi jika ingin meminjam barang lain.');
     }
 
@@ -104,5 +104,43 @@ class PeminjamanController extends Controller
     {
         $barangs = Barang::all();
         return view('mahasiswa_ketersediaan', compact('barangs'));
+    }
+
+    // 9. Tampilkan Halaman QnA (List Pertanyaan Saya)
+    public function qnaMahasiswa()
+    {
+        // Ambil data QnA milik user yang sedang login, urutkan dari yang terbaru
+        $dataQna = Qna::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        
+        return view('mahasiswa_qna', compact('dataQna'));
+    }
+
+    // 10. Proses Kirim Pertanyaan
+    public function storeQna(Request $request)
+    {
+        $request->validate([
+            'subjek' => 'required|max:100',
+            'pertanyaan' => 'required',
+        ]);
+
+        Qna::create([
+            'user_id' => Auth::id(),
+            'subjek' => $request->subjek,
+            'pertanyaan' => $request->pertanyaan,
+            'status' => 'Terkirim'
+        ]);
+
+        return back()->with('success', 'Pertanyaan terkirim! Admin akan segera menjawabnya.');
+    }
+
+    // Ambil data peminjaman milik user login, beserta data barangnya
+    public function riwayatMahasiswa()
+    {
+        $riwayats = Peminjaman::with('barang')
+                        ->where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('mahasiswa_riwayat', compact('riwayats'));
     }
 }

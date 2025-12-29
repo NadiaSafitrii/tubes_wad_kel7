@@ -17,9 +17,9 @@ return new class extends Migration
         $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade');
         $table->date('tgl_pinjam');
         $table->date('tgl_kembali');
-        $table->integer('durasi')->nullable(); // Durasi dalam hari
+        $table->integer('durasi')->nullable(); 
         $table->text('keperluan');
-        $table->string('file_surat')->nullable(); // Upload surat PDF
+        $table->string('file_surat')->nullable(); 
         $table->enum('status_approval', ['Pending', 'Approved', 'Rejected'])->default('Pending');
         $table->timestamps();
     });

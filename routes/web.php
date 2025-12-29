@@ -6,18 +6,17 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\QnaController;
 use App\Http\Controllers\AuthController;
 
-// --- 1. HALAMAN LOGIN ---
+// --- 1. Halaman Login ---
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login'); // Halaman awal jadi login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// --- 2. HALAMAN YANG BUTUH LOGIN (Group Middleware) ---
+// --- 2. Halaman yang perlu login ---
 Route::middleware(['auth'])->group(function () {
 
-    // --- AREA ADMIN ---
-    // (Idealnya kita buat middleware 'admin' sendiri, tapi sementara kita gabung dulu)
+    // --- ADMIN ---
     
     // Kelola Barang
     Route::get('/ketersediaan', [PeminjamanController::class, 'index'])->name('ketersediaan'); // Dashboard Utama
@@ -39,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/qna/{id}/jawab', [QnaController::class, 'jawab'])->name('admin.jawab');
     Route::delete('/admin/qna/{id}/hapus', [QnaController::class, 'destroy'])->name('admin.hapus');
     
+    // Mahasiswa
     // 1. Dashboard Utama (Halaman Selamat Datang)
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
     
@@ -51,4 +51,14 @@ Route::middleware(['auth'])->group(function () {
 
     // 4. Route Halaman Sukses
     Route::get('/pinjam/sukses', [PeminjamanController::class, 'sukses'])->name('peminjaman.sukses');
+
+    // QnA
+    // 1. Tampilkan Halaman QnA
+    Route::get('/mahasiswa/qna', [PeminjamanController::class, 'qnaMahasiswa'])->name('mahasiswa.qna');
+
+    // 2. Kirim Pertanyaan (POST)
+    Route::post('/mahasiswa/qna/store', [PeminjamanController::class, 'storeQna'])->name('qna.store');
+
+    // 3. Riwayat
+    Route::get('/mahasiswa/riwayat', [PeminjamanController::class, 'riwayatMahasiswa'])->name('mahasiswa.riwayat');
 });

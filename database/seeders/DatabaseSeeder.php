@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Admin Logistik',
             'email' => 'admin@telkom.io',
-            'password' => Hash::make('admin123'), // <--- Wajib pakai Hash::make()
+            'password' => Hash::make('admin123'), 
             'role' => 'admin',
             'nim' => null,
         ]);
@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Nadia Sapitri',
             'email' => 'nadiasapitri@student.telkomuniversity.ac.id',
-            'password' => Hash::make('nadia123'), // <--- Wajib pakai Hash::make()
+            'password' => Hash::make('nadia123'), 
             'role' => 'peminjam',
             'nim' => '1301204001',
         ]);
