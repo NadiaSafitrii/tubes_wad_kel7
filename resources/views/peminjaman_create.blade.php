@@ -14,6 +14,7 @@
         .sidebar a:hover { background-color: #f8f9fa; color: #b30000; padding-left: 25px; }
         .sidebar .active { background-color: #b30000; color: white !important; font-weight: bold; border-left: 5px solid #8a0000; }
         .admin-header { background-color: #fff; padding: 15px 20px; margin-bottom: 20px; border-bottom: 1px solid #dee2e6; }
+        .table-custom th { background-color: #b30000; color: white; border: none; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -37,6 +38,7 @@
                 <a href="{{ route('peminjaman.status') }}"> <i class="fas fa-info-circle me-2"></i> Status </a>
                 <a href="{{ route('mahasiswa.riwayat') }}"> <i class="fas fa-history me-2"></i> Riwayat </a>
                 <a href="{{ route('mahasiswa.qna') }}"> <i class="fas fa-comments me-2"></i> QnA </a>
+                
                 <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
                     <button type="submit" class="btn btn-link text-danger text-decoration-none ps-3 pt-3 w-100 text-start">
@@ -58,35 +60,17 @@
             <div class="container px-4">
                 <div class="row justify-content-center">
                     <div class="col-md-10">
-                        <div class="card border-0 shadow-sm mb-5">
+                        <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body p-4">
-                                
                                 @if(session('success'))
-                                    <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4 border-0 border-start border-success border-5">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-check-circle fa-2x me-3 text-success"></i>
-                                            <div>
-                                                <h6 class="fw-bold mb-1">Berhasil!</h6>
-                                                <small>{{ session('success') }}</small>
-                                            </div>
-                                        </div>
+                                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0 border-start border-success border-5">
+                                        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                    </div>
-                                @endif
-
-                                @if($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul class="mb-0">
-                                            @foreach($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
                                     </div>
                                 @endif
 
                                 <form action="{{ route('peminjaman.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                                    
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
@@ -94,16 +78,13 @@
                                                 <select name="barang_id" class="form-select bg-light" required>
                                                     <option value="">-- Pilih Barang --</option>
                                                     @foreach($barangs as $b)
-                                                        <option value="{{ $b->id }}" 
-                                                            {{ (isset($selectedBarang) && $selectedBarang->id == $b->id) ? 'selected' : '' }}>
-                                                            {{ $b->nama_barang }} (Lokasi: {{ $b->lokasi }})
-                                                        </option>
+                                                        <option value="{{ $b->id }}">{{ $b->nama_barang }} ({{ $b->lokasi }})</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold small text-secondary">KEPERLUAN / KEGIATAN</label>
-                                                <textarea name="keperluan" class="form-control bg-light" rows="5" required></textarea>
+                                                <textarea name="keperluan" class="form-control bg-light" rows="5" required placeholder="Contoh: Kegiatan UKM kemah bersama..."></textarea>
                                             </div>
                                         </div>
 
@@ -125,22 +106,65 @@
                                         </div>
                                     </div>
 
-                                    <hr class="my-4">
-                                    
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <a href="{{ route('mahasiswa.dashboard') }}" class="btn btn-outline-secondary px-4">Batal</a>
-                                        <button type="submit" class="btn btn-danger px-4 fw-bold">
+                                    <div class="d-flex justify-content-end gap-2 mt-3">
+                                        <button type="submit" class="btn btn-danger px-4 fw-bold rounded-pill">
                                             <i class="fas fa-paper-plane me-2"></i> Kirim Pengajuan
                                         </button>
                                     </div>
-
                                 </form>
-                                </div>
+                            </div>
                         </div>
+
+                        <div class="card border-0 shadow-sm mb-5">
+                            <div class="card-header bg-white border-0 pt-4 ps-4">
+                                <h6 class="fw-bold text-dark mb-0">
+                                    <i class="fas fa-history me-2 text-warning"></i> Pengajuan Terbaru (Status: Pending)
+                                </h6>
+                                <small class="text-muted">Anda dapat membatalkan pengajuan jika terjadi kesalahan input.</small>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-custom">
+                                            <tr>
+                                                <th class="ps-3 rounded-start">Barang</th>
+                                                <th>Keperluan</th>
+                                                <th>Waktu Pinjam</th>
+                                                <th class="text-center rounded-end">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($pending_pinjams as $p)
+                                            <tr>
+                                                <td class="ps-3 fw-bold">{{ $p->barang->nama_barang }}</td>
+                                                <td><small class="text-muted">{{ Str::limit($p->keperluan, 40) }}</small></td>
+                                                <td><small class="fw-bold text-secondary">{{ $p->tgl_pinjam }}</small></td>
+                                                <td class="text-center">
+                                                    <form action="{{ route('peminjaman.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pengajuan ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger px-3 rounded-pill">
+                                                            <i class="fas fa-trash-alt me-1"></i> Batal
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center py-4 text-muted small">
+                                                    <i class="fas fa-info-circle me-1"></i> Belum ada pengajuan aktif yang berstatus Pending.
+                                                </td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

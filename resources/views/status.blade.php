@@ -14,13 +14,16 @@
         .sidebar a:hover { background-color: #f8f9fa; color: #b30000; padding-left: 25px; }
         .sidebar .active { background-color: #b30000; color: white !important; font-weight: bold; border-left: 5px solid #8a0000; }
         .admin-header { background-color: #fff; padding: 15px 20px; margin-bottom: 20px; border-bottom: 1px solid #dee2e6; }
+        .status-card { transition: transform 0.2s; border-radius: 15px; }
+        .status-card:hover { transform: translateY(-5px); }
+        .btn-close-custom { font-size: 0.8rem; opacity: 0.5; transition: 0.3s; }
+        .btn-close-custom:hover { opacity: 1; color: #b30000; }
     </style>
 </head>
 <body>
 
 <div class="container-fluid">
     <div class="row">
-        
         <div class="col-md-2 sidebar p-0 pt-4">
             <div class="text-center mb-4">
                 <div class="p-2 mx-auto mb-3" style="width: 100px;">
@@ -34,9 +37,9 @@
                 <a href="{{ route('mahasiswa.dashboard') }}"> <i class="fas fa-home me-2"></i> Dashboard </a>
                 <a href="{{ route('mahasiswa.ketersediaan') }}"> <i class="fas fa-search me-2"></i> Cek Ketersediaan </a>
                 <a href="{{ route('peminjaman.create') }}"> <i class="fas fa-file-signature me-2"></i> Ajukan Peminjaman </a>
-                <a href="#" class="active"> <i class="fas fa-info-circle me-2"></i> Status </a>
-                <a href="#"> <i class="fas fa-history me-2"></i> Riwayat </a>
-                <a href="#"> <i class="fas fa-comments me-2"></i> QnA </a>
+                <a href="{{ route('peminjaman.status') }}" class="active"> <i class="fas fa-info-circle me-2"></i> Status </a>
+                <a href="{{ route('mahasiswa.riwayat') }}"> <i class="fas fa-history me-2"></i> Riwayat </a>
+                <a href="{{ route('mahasiswa.qna') }}"> <i class="fas fa-comments me-2"></i> QnA </a>
 
                 <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
@@ -49,7 +52,7 @@
 
         <div class="col-md-10 p-0">
             <div class="admin-header d-flex justify-content-between align-items-center">
-                <h4 class="m-0 fw-bold text-dark fs-5">Status Peminjaman</h4>
+                <h4 class="m-0 fw-bold text-dark fs-5">Tracking Status</h4>
                 <div class="user-info">
                     <span class="me-2 fw-bold small text-dark">Halo, {{ Auth::user()->name }}</span>
                     <i class="fas fa-user-circle fa-2x text-secondary align-middle"></i>
@@ -59,40 +62,68 @@
             <div class="container px-4">
                 <div class="row justify-content-center">
                     <div class="col-md-10">
+                        
+                        @if(session()->has('success'))
+                            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
+                                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
                         <div class="mb-4">
-                            <h3 class="fw-bold text-dark">Status Peminjaman</h3>
-                            <p class="text-muted small">Berikut adalah notifikasi status persetujuan peminjaman Anda secara real-time.</p>
+                            <h3 class="fw-bold text-dark mb-1">Status Peminjaman</h3>
+                            <p class="text-muted small mb-0">Pelacakan real-time pengajuan aset logistik Anda.</p>
                         </div>
 
-                        <div class="card border-0 shadow-sm rounded-3">
+                        <div class="card border-0 shadow-sm status-card">
                             <div class="card-body p-4">
                                 <h5 class="fw-bold mb-4">Notifikasi Terbaru</h5>
                                 
                                 <div id="status-container">
                                     @if($peminjamans->isEmpty())
-                                        <div class="text-center py-4">
-                                            <p class="text-muted">Belum ada data peminjaman.</p>
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-folder-open fa-3x text-light mb-3"></i>
+                                            <p class="text-muted">Belum ada data tracking peminjaman aktif.</p>
                                         </div>
                                     @else
                                         @foreach($peminjamans as $item)
                                             @php
+                                                // Logika warna alert dan ikon
                                                 $alertClass = 'alert-primary'; 
-                                                $statusText = 'Menunggu Persetujuan';
+                                                $statusText = 'MENUNGGU PERSETUJUAN'; 
+                                                $icon = 'fa-spinner fa-spin';
                                                 
                                                 if($item->status_approval == 'Approved') {
                                                     $alertClass = 'alert-success'; 
-                                                    $statusText = 'DISETUJUI';
+                                                    $statusText = 'DISETUJUI'; 
+                                                    $icon = 'fa-check-circle';
                                                 } elseif($item->status_approval == 'Rejected') {
                                                     $alertClass = 'alert-danger'; 
-                                                    $statusText = 'DITOLAK';
+                                                    $statusText = 'DITOLAK'; 
+                                                    $icon = 'fa-times-circle';
                                                 }
                                             @endphp
 
-                                            <div class="alert {{ $alertClass }} border-0 shadow-sm mb-3 d-flex align-items-center p-3">
-                                                <i class="fas fa-info-circle fa-lg me-3"></i>
-                                                <div class="flex-grow-1">
-                                                    Permintaan peminjaman <strong>{{ $item->barang->nama_barang }}</strong> 
-                                                    untuk tanggal <strong>{{ $item->tgl_pinjam }}</strong> telah <strong>{{ $statusText }}</strong> oleh Admin.
+                                            <div class="alert {{ $alertClass }} border-0 shadow-sm mb-4 p-3 rounded-3 position-relative">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas {{ $icon }} fa-2x me-3"></i>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center pe-4">
+                                                            <div>
+                                                                Permintaan peminjaman <strong>{{ $item->barang->nama_barang }}</strong> 
+                                                                untuk tanggal <strong>{{ \Carbon\Carbon::parse($item->tgl_pinjam)->format('d M Y') }}</strong> 
+                                                                telah <strong>{{ $statusText }}</strong> oleh Admin.
+                                                            </div>
+
+                                                            <form action="{{ route('peminjaman.destroy', $item->id) }}" method="POST">
+                                                                @csrf 
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn-close position-absolute" 
+                                                                        style="top: 15px; right: 15px;" 
+                                                                        onclick="return confirm('Hapus notifikasi ini dari dashboard?')"></button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endforeach
