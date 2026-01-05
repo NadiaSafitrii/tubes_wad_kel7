@@ -10,4 +10,12 @@ class Barang extends Model
     use HasFactory;
     
     protected $guarded = []; 
+
+    /**
+     * Get peminjaman/booking records for this barang
+     */
+    public function peminjamans()
+    {
+        return $this->hasMany(Peminjaman::class);
+    }
 }

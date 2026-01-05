@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class QnaController extends Controller
 {
-    // --- Admin Qna ---
+    
+
+    
     public function indexAdmin()
     {
         
@@ -21,6 +23,7 @@ class QnaController extends Controller
         return view('admin_qna', compact('qnaList'));
     }
 
+    
     public function jawab(Request $request, $id)
     {
         $request->validate([
@@ -36,6 +39,7 @@ class QnaController extends Controller
         return redirect()->route('admin.qna')->with('success', 'Jawaban berhasil dikirim!');
     }
 
+    
     public function destroy($id)
     {
         $qna = Qna::findOrFail($id);
@@ -44,7 +48,7 @@ class QnaController extends Controller
         return redirect()->route('admin.qna')->with('success', 'Pertanyaan dihapus.');
     }
 
-    // --- User Qna ---
+    
     
     public function storeTanya(Request $request)
     {

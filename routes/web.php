@@ -43,7 +43,18 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard & Cek Ketersediaan Barang
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
-    Route::get('/mahasiswa/ketersediaan', [PeminjamanController::class, 'ketersediaanMahasiswa'])->name('mahasiswa.ketersediaan');
+    
+    // 2. Cek Ketersediaan (Daftar Barang dengan Search/Filter)
+    Route::get('/mahasiswa/ketersediaan', [BarangController::class, 'search'])->name('mahasiswa.ketersediaan');
+    
+    // 3. Detail Barang dengan Kalender
+    Route::get('/mahasiswa/barang/{id}', [BarangController::class, 'show'])->name('barang.show');
+    
+    // 4. API Kalender Booking (JSON)
+    Route::get('/mahasiswa/barang/{id}/calendar', [BarangController::class, 'getBookingSchedule'])->name('barang.calendar');
+    
+    // 5. Export PDF Spesifikasi
+    Route::get('/mahasiswa/barang/{id}/export-pdf', [BarangController::class, 'exportPdf'])->name('barang.exportPdf');
 
     // Form Pengajuan Pinjam
     Route::get('/pinjam/ajukan', [PeminjamanController::class, 'create'])->name('peminjaman.create');
