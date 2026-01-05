@@ -9,21 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class QnaController extends Controller
 {
-    // --- Admin Qna ---
+    
 
-    // 1. Admin melihat daftar pertanyaan
+    
     public function indexAdmin()
     {
-        // Ambil data dari tabel qnas, urutkan yang terbaru
+        
         $qnaList = Qna::with('user')
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-        // Pastikan variabel yang dikirim adalah 'qnaList'
+        
         return view('admin_qna', compact('qnaList'));
     }
 
-    // 2. Admin menjawab pertanyaan
+    
     public function jawab(Request $request, $id)
     {
         $request->validate([
@@ -33,13 +33,13 @@ class QnaController extends Controller
         $qna = Qna::findOrFail($id);
         $qna->update([
             'jawaban' => $request->jawaban,
-            'status'  => 'Dijawab' // Status harus sesuai dengan Enum di database
+            'status'  => 'Dijawab' 
         ]);
 
         return redirect()->route('admin.qna')->with('success', 'Jawaban berhasil dikirim!');
     }
 
-    // 3. Admin menghapus pertanyaan
+    
     public function destroy($id)
     {
         $qna = Qna::findOrFail($id);
@@ -48,7 +48,7 @@ class QnaController extends Controller
         return redirect()->route('admin.qna')->with('success', 'Pertanyaan dihapus.');
     }
 
-    // --- User Qna ---
+    
     
     public function storeTanya(Request $request)
     {
