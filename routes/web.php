@@ -1,36 +1,37 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\QnaController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AuthController;
 
-// --- 1. Halaman Login ---
+// --- 1. HALAMAN LOGIN ---
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login'); 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// --- 2. Halaman yang perlu login ---
+// --- 2. HALAMAN YANG PERLU LOGIN (MIDDLEWARE AUTH) ---
 Route::middleware(['auth'])->group(function () {
 
-    // --- ADMIN SECTION ---
+    // ==========================================
+    // BAGIAN ADMIN (LOGISTIK)
+    // ==========================================
       
-    // Kelola Barang & Verifikasi (Poin 3c: Update)
-    Route::get('/ketersediaan', [PeminjamanController::class, 'index'])->name('ketersediaan'); 
     
-    // CRUD Barang
-    Route::get('/barang/tambah', [BarangController::class, 'create'])->name('barang.create');
-    Route::post('/barang/store', [BarangController::class, 'store'])->name('barang.store');
-    Route::get('/barang/edit/{id}', [BarangController::class, 'edit'])->name('barang.edit');
-    Route::put('/barang/update/{id}', [BarangController::class, 'update'])->name('barang.update');
-    Route::delete('/barang/hapus/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
+    Route::get('/ketersediaan', [PeminjamanController::class, 'indexBarang'])->name('admin.barang.index'); 
+    
+    // Rute CRUD Barang 
+    Route::get('/barang/tambah', [PeminjamanController::class, 'createBarang'])->name('barang.create');
+    Route::post('/barang/store', [PeminjamanController::class, 'storeBarang'])->name('barang.store');
+    Route::get('/barang/edit/{id}', [PeminjamanController::class, 'editBarang'])->name('barang.edit');
+    Route::put('/barang/update/{id}', [PeminjamanController::class, 'updateBarang'])->name('barang.update');
+    Route::delete('/barang/hapus/{id}', [PeminjamanController::class, 'destroyBarang'])->name('barang.destroy');
 
-    // Verifikasi Peminjaman (Logika Update Status Real-time)
-    Route::get('/admin/verifikasi', [PeminjamanController::class, 'indexVerifikasi'])->name('admin.verifikasi');
+    // Verifikasi Peminjaman
+    Route::get('/admin/verifikasi', [PeminjamanController::class, 'index'])->name('admin.verifikasi');
     Route::post('/admin/verifikasi/{id}/approve', [PeminjamanController::class, 'approve'])->name('admin.approve');
     Route::post('/admin/verifikasi/{id}/reject', [PeminjamanController::class, 'reject'])->name('admin.reject');
 
@@ -40,35 +41,27 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/admin/qna/{id}/hapus', [QnaController::class, 'destroy'])->name('admin.hapus');
     
     
-    // --- USER (MAHASISWA) SECTION ---
+    // ==========================================
+    // BAGIAN MAHASISWA (USER PANEL)
+    // ==========================================
 
-    // 1. Dashboard Utama
+    // Dashboard & Cek Ketersediaan Mahasiswa
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
-    
-    // 2. Cek Ketersediaan
     Route::get('/mahasiswa/ketersediaan', [PeminjamanController::class, 'ketersediaanMahasiswa'])->name('mahasiswa.ketersediaan');
 
-    // 3. Form Peminjaman (Poin 3a: Create Status)
-    Route::get('/pinjam/ajukan/{barang_id?}', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+    // Form Pengajuan Pinjam
+    Route::get('/pinjam/ajukan', [PeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post('/pinjam/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
-    // 4. Fitur Status (Poin 2 & 3b: Read)
+    // Status Tracking & Hapus 
     Route::get('/mahasiswa/status', [PeminjamanController::class, 'status'])->name('peminjaman.status');
-    Route::get('/mahasiswa/status/update', [PeminjamanController::class, 'checkStatusUpdate'])->name('peminjaman.update');
-  
-    // 5. Delete Tracking (Poin 3d: Delete)
-    // Rute ini memungkinkan mahasiswa membatalkan pengajuan yang masih 'Pending'
     Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
 
-    // QnA Mahasiswa
+    // Riwayat & QnA Mahasiswa
+    Route::get('/mahasiswa/riwayat', [PeminjamanController::class, 'riwayatMahasiswa'])->name('mahasiswa.riwayat');
     Route::get('/mahasiswa/qna', [PeminjamanController::class, 'qnaMahasiswa'])->name('mahasiswa.qna');
     Route::post('/mahasiswa/qna/store', [PeminjamanController::class, 'storeQna'])->name('qna.store');
 
-    // Riwayat Mahasiswa (Read dengan Pagination & Filter)
-    Route::get('/mahasiswa/riwayat', [PeminjamanController::class, 'riwayatMahasiswa'])->name('mahasiswa.riwayat');
-
-    // Feedback (Rating & Review)
+    // Feedback
     Route::post('/feedback/store', [FeedbackController::class, 'store'])->name('feedback.store');
-    Route::put('/feedback/update/{id}', [FeedbackController::class, 'update'])->name('feedback.update');
-    Route::delete('/feedback/delete/{id}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
 });

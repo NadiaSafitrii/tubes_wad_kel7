@@ -18,14 +18,14 @@
         .badge-approved { background-color: #198754; color: #fff; }
         .badge-rejected { background-color: #dc3545; color: #fff; }
         
-        /* Style Bintang */
+       
         .star-rating { direction: rtl; display: inline-block; padding: 10px; }
         .star-rating input { display: none; }
         .star-rating label { color: #bbb; font-size: 2rem; padding: 0; cursor: pointer; transition: 0.3s; }
         .star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label { color: #f2b600; }
         .text-warning-star { color: #f2b600; }
         
-        /* Memastikan komentar panjang terlihat semua */
+        
         .comment-text { 
             white-space: normal; 
             word-wrap: break-word; 

@@ -18,14 +18,15 @@ class PeminjamanController extends Controller
     // Nampilin tabel daftar barang logistik
     public function indexBarang()
     {
-        $barangs = Barang::all();
-        return view('admin.barang.index', compact('barangs'));
+    $barangs = Barang::all();
+    // Use 'ketersediaan' because that is the name of your file in resources/views
+    return view('ketersediaan', compact('barangs')); 
     }
 
     // Buka form buat input barang baru
     public function createBarang()
     {
-        return view('admin.barang.create');
+        return view('barang_create');
     }
 
     // Nyimpen barang baru yang diinput admin ke database
@@ -43,8 +44,9 @@ class PeminjamanController extends Controller
     // Buka form buat edit data barang
     public function editBarang($id)
     {
-        $barang = Barang::findOrFail($id);
-        return view('admin.barang.edit', compact('barang'));
+    $barang = Barang::findOrFail($id);
+    // GANTI: hilangkan 'admin.barang.' karena filenya di folder utama views
+    return view('barang_edit', compact('barang')); 
     }
 
     // Proses update data barang setelah diedit
@@ -186,4 +188,21 @@ class PeminjamanController extends Controller
         $dataQna = Qna::where('user_id', Auth::id())->latest()->get();
         return view('mahasiswa_qna', compact('dataQna'));
     }
+
+    public function storeQna(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'pertanyaan' => 'required',
+    ]);
+
+    // Simpan ke database dengan menyertakan kolom 'subjek'
+    \App\Models\Qna::create([
+        'user_id'    => Auth::id(),
+        'pertanyaan' => $request->pertanyaan,
+        'subjek'     => 'Umum', // Tambahkan ini agar database tidak menolak data
+    ]);
+
+    return back()->with('success', 'Pertanyaan kamu berhasil dikirim!');
+}
 }

@@ -88,7 +88,7 @@
                                     @else
                                         @foreach($peminjamans as $item)
                                             @php
-                                                // Logika warna alert dan ikon
+                                                
                                                 $alertClass = 'alert-primary'; 
                                                 $statusText = 'MENUNGGU PERSETUJUAN'; 
                                                 $icon = 'fa-spinner fa-spin';
