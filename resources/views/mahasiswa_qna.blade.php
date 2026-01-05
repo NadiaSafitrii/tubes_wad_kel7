@@ -36,9 +36,9 @@
                 <a href="{{ route('mahasiswa.dashboard') }}"> <i class="fas fa-home me-2"></i> Dashboard </a>
                 <a href="{{ route('mahasiswa.ketersediaan') }}"> <i class="fas fa-search me-2"></i> Cek Ketersediaan </a>
                 <a href="{{ route('peminjaman.create') }}"> <i class="fas fa-file-signature me-2"></i> Ajukan Peminjaman </a>
-                <a href="#"> <i class="fas fa-info-circle me-2"></i> Status </a>
+                <a href="{{ route('peminjaman.status') }}"> <i class="fas fa-info-circle me-2"></i> Status </a>
                 <a href="{{ route('mahasiswa.riwayat') }}"> <i class="fas fa-history me-2"></i> Riwayat </a>
-                <a href="{{ route('mahasiswa.qna') }}"> <i class="fas fa-comments me-2"></i> QnA </a>
+                <a href="{{ route('mahasiswa.qna') }}" class="active"> <i class="fas fa-comments me-2"></i> QnA </a>
                 <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
                     <button type="submit" class="btn btn-link text-danger text-decoration-none ps-3 pt-3 w-100 text-start">
@@ -77,7 +77,7 @@
                                     @csrf
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-secondary">SUBJEK / JUDUL</label>
-                                        <input type="text" name="subjek" class="form-control bg-light" placeholder="Contoh: Barang Rusak, Durasi Pinjam.." required>
+                                        <input type="text" name="subjek" class="form-control bg-light" placeholder="Contoh: Durasi Pinjam." required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-secondary">ISI PERTANYAAN</label>

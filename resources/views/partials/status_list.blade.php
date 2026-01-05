@@ -1,14 +1,13 @@
 @foreach($peminjamans as $item)
     @php
-        // Logika penentuan warna alert Bootstrap
-        $alertClass = 'alert-info'; // Default Biru (Pending)
+        $alertClass = 'alert-info'; 
         $statusLabel = 'Pending';
 
         if($item->status_approval == 'Approved') {
-            $alertClass = 'alert-success'; // Hijau
+            $alertClass = 'alert-success'; 
             $statusLabel = 'Disetujui';
         } elseif($item->status_approval == 'Rejected') {
-            $alertClass = 'alert-danger'; // Merah
+            $alertClass = 'alert-danger';
             $statusLabel = 'Ditolak';
         }
     @endphp

@@ -74,7 +74,7 @@
                 <div class="card border-0 shadow-sm text-center py-5">
                     <div class="card-body">
                         <h2 class="fw-bold text-dark">Selamat Datang di Sistem Logistik!</h2>
-                        <p class="text-secondary">Halo {{ Auth::user()->name }}, silakan pilih menu di samping untuk melakukan peminjaman barang.</p>
+                        <p class="text-secondary">Halo {{ Auth::user()->name }}, silakan pilih menu di bawah untuk melakukan peminjaman barang.</p>
                         
                         <div class="mt-4">
                             <a href="{{ route('mahasiswa.ketersediaan') }}" class="btn btn-danger px-4 rounded-pill me-2">
