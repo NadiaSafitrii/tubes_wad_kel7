@@ -102,7 +102,7 @@
 
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="m-0 font-weight-bold text-primary">Permintaan Masuk (Pending)</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Permintaan Masuk</h6>
                     </div>
                     <div class="card-body p-0">
                         <table class="table table-hover mb-0 align-middle">

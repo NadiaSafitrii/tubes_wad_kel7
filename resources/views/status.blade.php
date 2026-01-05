@@ -72,7 +72,7 @@
 
                         <div class="mb-4">
                             <h3 class="fw-bold text-dark mb-1">Status Peminjaman</h3>
-                            <p class="text-muted small mb-0">Pelacakan real-time pengajuan aset logistik Anda.</p>
+                            <p class="text-muted small mb-0">Pelacakan real-time pengajuan peminjaman Anda.</p>
                         </div>
 
                         <div class="card border-0 shadow-sm status-card">

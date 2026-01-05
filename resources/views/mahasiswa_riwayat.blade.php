@@ -39,7 +39,6 @@
 
 <div class="container-fluid">
     <div class="row">
-        {{-- Sidebar --}}
         <div class="col-md-2 sidebar p-0 pt-4">
             <div class="text-center mb-4">
                 <div class="p-2 mx-auto mb-3" style="width: 100px;">
@@ -64,7 +63,6 @@
             </nav>
         </div>
 
-        {{-- Main Content --}}
         <div class="col-md-10 p-0">
             <div class="admin-header d-flex justify-content-between align-items-center">
                 <h4 class="m-0 fw-bold text-dark fs-5">Riwayat Peminjaman</h4>
@@ -75,7 +73,6 @@
             </div>
 
             <div class="container px-4">
-                {{-- Filter & Search --}}
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-3">
                         <form action="{{ route('mahasiswa.riwayat') }}" method="GET" class="row g-2 align-items-center">
@@ -98,7 +95,6 @@
                     </div>
                 </div>
 
-                {{-- Tabel Riwayat --}}
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
                         @if(session('success'))
@@ -139,21 +135,17 @@
                                         <td class="text-center">
                                             @if($r->status_approval == 'Approved')
                                                 @if($r->feedback)
-                                                    {{-- Tampilan Feedback Selesai --}}
                                                     <div class="text-warning-star mb-1">
                                                         @for($i = 1; $i <= 5; $i++)
                                                             <i class="{{ $i <= $r->feedback->rating ? 'fas' : 'far' }} fa-star"></i>
                                                         @endfor
                                                     </div>
-                                                    {{-- Menampilkan seluruh komentar --}}
                                                     <div class="small text-muted mb-2 comment-text">"{{ $r->feedback->komentar }}"</div>
                                                     
                                                     <div class="d-flex justify-content-center gap-2">
-                                                        {{-- d. Update: Tombol Edit --}}
                                                         <button class="btn btn-sm btn-outline-primary border-0" data-bs-toggle="modal" data-bs-target="#editFeedbackModal{{ $r->feedback->id }}">
                                                             <i class="fas fa-edit fa-lg"></i>
                                                         </button>
-                                                        {{-- e. Delete: Tombol Hapus --}}
                                                         <form action="{{ route('feedback.destroy', $r->feedback->id) }}" method="POST">
                                                             @csrf @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-outline-danger border-0" onclick="return confirm('Hapus ulasan ini?')">
@@ -162,7 +154,6 @@
                                                         </form>
                                                     </div>
                                                 @else
-                                                    {{-- c. Create: Tombol Beri Ulasan --}}
                                                     <button class="btn btn-sm btn-outline-warning rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#feedbackModal{{ $r->id }}">
                                                         <i class="fas fa-star me-1"></i> Beri Ulasan
                                                     </button>
@@ -186,9 +177,7 @@
     </div>
 </div>
 
-{{-- MODAL AREA --}}
 @foreach($riwayats as $r)
-    {{-- Modal Create --}}
     @if($r->status_approval == 'Approved' && !$r->feedback)
     <div class="modal fade" id="feedbackModal{{ $r->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -218,7 +207,6 @@
     </div>
     @endif
 
-    {{-- d. Modal Update: Edit Ulasan --}}
     @if($r->feedback)
     <div class="modal fade" id="editFeedbackModal{{ $r->feedback->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">

@@ -8,10 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Feedback extends Model
 {
     use HasFactory;
-
     
     protected $table = 'feedbacks';
-
     
     protected $fillable = [
         'peminjaman_id',
@@ -20,7 +18,6 @@ class Feedback extends Model
         'komentar'
     ];
 
-    
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class);

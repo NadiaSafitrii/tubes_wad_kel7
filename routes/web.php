@@ -11,15 +11,11 @@ Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-// --- 2. HALAMAN YANG PERLU LOGIN (MIDDLEWARE AUTH) ---
 Route::middleware(['auth'])->group(function () {
 
     // ==========================================
-    // BAGIAN ADMIN (LOGISTIK)
+    // BAGIAN ADMIN
     // ==========================================
-      
     
     Route::get('/ketersediaan', [PeminjamanController::class, 'indexBarang'])->name('admin.barang.index'); 
     
@@ -42,10 +38,10 @@ Route::middleware(['auth'])->group(function () {
     
     
     // ==========================================
-    // BAGIAN MAHASISWA (USER PANEL)
+    // BAGIAN MAHASISWA 
     // ==========================================
 
-    // Dashboard & Cek Ketersediaan Mahasiswa
+    // Dashboard & Cek Ketersediaan Barang
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
     Route::get('/mahasiswa/ketersediaan', [PeminjamanController::class, 'ketersediaanMahasiswa'])->name('mahasiswa.ketersediaan');
 
@@ -53,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pinjam/ajukan', [PeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post('/pinjam/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
-    // Status Tracking & Hapus 
+    // Status Tracking
     Route::get('/mahasiswa/status', [PeminjamanController::class, 'status'])->name('peminjaman.status');
     Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
 
@@ -64,4 +60,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Feedback
     Route::post('/feedback/store', [FeedbackController::class, 'store'])->name('feedback.store');
+    Route::put('/feedback/update/{id}', [FeedbackController::class, 'update'])->name('feedback.update');
+    Route::delete('/feedback/delete/{id}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
 });

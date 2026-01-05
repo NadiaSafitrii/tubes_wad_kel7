@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class FeedbackController extends Controller
 {
-   
     public function store(Request $request)
     {
        
@@ -17,7 +16,6 @@ class FeedbackController extends Controller
             'rating'        => 'required|integer|min:1|max:5',
             'komentar'      => 'nullable|string'
         ]);
-
        
         Feedback::create([
             'peminjaman_id' => $request->peminjaman_id,
@@ -29,7 +27,6 @@ class FeedbackController extends Controller
         return back()->with('success', 'Terima kasih! Feedback Anda telah tersimpan.');
     }
 
-    
     public function update(Request $request, $id)
     {
         
@@ -37,12 +34,10 @@ class FeedbackController extends Controller
             'rating'   => 'required|integer|min:1|max:5',
             'komentar' => 'nullable|string'
         ]);
-
         
         $feedback = Feedback::where('id', $id)
                             ->where('user_id', Auth::id())
                             ->firstOrFail();
-
         
         $feedback->update([
             'rating'   => $request->rating,
@@ -51,7 +46,6 @@ class FeedbackController extends Controller
 
         return back()->with('success', 'Ulasan Anda berhasil diperbarui!');
     }
-
     
     public function destroy($id)
     {

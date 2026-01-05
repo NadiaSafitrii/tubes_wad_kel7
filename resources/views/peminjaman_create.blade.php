@@ -84,7 +84,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold small text-secondary">KEPERLUAN / KEGIATAN</label>
-                                                <textarea name="keperluan" class="form-control bg-light" rows="5" required placeholder="Contoh: Kegiatan UKM kemah bersama..."></textarea>
+                                                <textarea name="keperluan" class="form-control bg-light" rows="5" required placeholder="Contoh: Kegiatan UKM "></textarea>
                                             </div>
                                         </div>
 

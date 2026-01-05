@@ -77,7 +77,7 @@
                                     @csrf
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-secondary">SUBJEK / JUDUL</label>
-                                        <input type="text" name="subjek" class="form-control bg-light" placeholder="Contoh: Barang Rusak, Durasi Pinjam.." required>
+                                        <input type="text" name="subjek" class="form-control bg-light" placeholder="Contoh: Durasi Pinjam." required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-secondary">ISI PERTANYAAN</label>
