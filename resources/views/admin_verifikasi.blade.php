@@ -29,14 +29,12 @@
             color: #b30000;
             padding-left: 25px; 
         }
-        /* Menu Aktif Merah */
         .sidebar .active {
             background-color: #b30000;
             color: white !important;
             font-weight: bold;
             border-left: 5px solid #8a0000;
         }
-        .sidebar .active:hover { color: white !important; }
         .admin-header {
             background-color: #fff;
             padding: 15px 20px;
@@ -49,7 +47,6 @@
 
 <div class="container-fluid">
     <div class="row">
-        
         <div class="col-md-2 sidebar p-0 pt-4">
             <div class="text-center mb-4">
                 <div class="p-2 mx-auto mb-3" style="width: 100px;">
@@ -63,20 +60,16 @@
                 <a href="{{ url('/ketersediaan') }}" class="{{ request()->is('ketersediaan*') ? 'active' : '' }}">
                     <i class="fas fa-box-open me-2"></i> Kelola Barang
                 </a>
-                
                 <a href="{{ route('admin.verifikasi') }}" class="{{ request()->routeIs('admin.verifikasi') ? 'active' : '' }}">
                     <i class="fas fa-clipboard-check me-2"></i> Verifikasi Peminjaman
                 </a>
-
                 <a href="{{ route('admin.riwayat.index') }}" class="{{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
                     <i class="fas fa-history me-2"></i> Semua Riwayat
                 </a>
-
                 <a href="{{ route('admin.qna') }}" class="{{ request()->routeIs('admin.qna') ? 'active' : '' }}">
                     <i class="fas fa-comments me-2"></i> Jawab QnA
                 </a>
-
-                 <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
+                <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
                     <button type="submit" class="btn btn-link text-danger text-decoration-none ps-3 pt-3 w-100 text-start">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
@@ -86,7 +79,6 @@
         </div>
 
         <div class="col-md-10 p-0">
-            
             <div class="admin-header d-flex justify-content-between align-items-center">
                 <h4 class="m-0 fw-bold text-dark fs-5">Verifikasi Peminjaman</h4>
                 <div class="user-info">
@@ -96,7 +88,6 @@
             </div>
 
             <div class="container-fluid px-4">
-
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show shadow-sm">
                         <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
@@ -117,7 +108,7 @@
                                         <th>Barang</th>
                                         <th>Jadwal</th>
                                         <th>Keperluan</th>
-                                        <th>Bukti</th>
+                                        <th class="text-center">Bukti</th>
                                         <th class="text-center">Keputusan</th>
                                     </tr>
                                 </thead>
@@ -134,27 +125,39 @@
                                             <small class="d-block text-muted">Kembali: {{ $p->tgl_kembali }}</small>
                                         </td>
                                         <td><small>{{ $p->keperluan }}</small></td>
-                                        <td>
-                                            <a href="{{ asset('uploads/'.$p->file_surat) }}" target="_blank" class="btn btn-sm btn-outline-info">
-                                                <i class="fas fa-file-pdf"></i> Cek
-                                            </a>
-                                        </td>
+                                        
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
-                                                <form action="{{ route('admin.approve', $p->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Setujui peminjaman ini?')">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                </form>
-
-                                                <form action="{{ route('admin.reject', $p->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tolak peminjaman ini?')">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </form>
+                                                <a href="{{ asset('storage/' . $p->file_surat) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-eye"></i> Lihat
+                                                </a>
+                                                <a href="{{ asset('storage/' . $p->file_surat) }}" download="Bukti_Peminjaman_{{ $p->nama }}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-download"></i> Ekspor
+                                                </a>
                                             </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if($p->status_approval == 'Pending')
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <form action="{{ route('admin.peminjaman.approve', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Setujui?')">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>
+                                                    </form>
+                                                    <form action="{{ route('admin.peminjaman.reject', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tolak?')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            @else
+                                                <span class="badge {{ $p->status_approval == 'Approved' ? 'bg-success' : 'bg-danger' }} px-3 py-2">
+                                                    {{ $p->status_approval }}
+                                                </span>
+                                            @endif
                                         </td>
                                     </tr>
                                     @empty
@@ -168,72 +171,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <table class="table table-hover mb-0 align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Peminjam</th>
-                                    <th>Barang</th>
-                                    <th>Jadwal</th>
-                                    <th>Keperluan</th>
-                                    <th class="text-center">Bukti</th>
-                                    <th class="text-center">Keputusan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($peminjamans as $p)
-                                <tr>
-                                    <td>
-                                        <strong>{{ $p->user->name ?? 'User #'.$p->user_id }}</strong><br>
-                                        <small class="text-muted">NIM: {{ $p->user->nim ?? '-' }}</small>
-                                    </td>
-                                    <td>{{ $p->barang->nama_barang ?? 'Barang Dihapus' }}</td>
-                                    <td>
-                                        <small class="d-block text-muted">Pinjam: {{ $p->tgl_pinjam }}</small>
-                                        <small class="d-block text-muted">Kembali: {{ $p->tgl_kembali }}</small>
-                                    </td>
-                                    <td><small>{{ $p->keperluan }}</small></td>
-                                    <td class="text-center">
-                                            <div class="d-flex justify-content-center gap-2">
-                                                <a href="{{ asset('storage/' . $p->file_surat) }}" target="_blank" class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-eye"></i> Lihat
-                                                </a>
-                                                <a href="{{ asset('storage/' . $p->file_surat) }}" download="Bukti_{{ $p->nama }}" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-download"></i> Ekspor
-                                                </a>
-                                            </div>
-                                        </td>
-
-                                        <td class="text-center">
-                                            @if($p->status_approval == 'Pending')
-                                                <div class="d-flex justify-content-center gap-2">
-                                                    <form action="{{ route('admin.peminjaman.approve', $p->id) }}" method="POST">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
-                                                    </form>
-                                                    <form action="{{ route('admin.peminjaman.reject', $p->id) }}" method="POST">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
-                                                    </form>
-                                                </div>
-                                            @else
-                                                <span class="badge {{ $p->status_approval == 'Approved' ? 'bg-success' : 'bg-danger' }} px-3 py-2">
-                                                    {{ $p->status_approval }}
-                                                </span>
-                                            @endif
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
-                                        <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i><br>
-                                        Tidak ada pengajuan baru saat ini.
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
