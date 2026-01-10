@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\QnaController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AuthController;
