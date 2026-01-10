@@ -10,6 +10,7 @@ class Barang extends Model
     use HasFactory;
     
     protected $guarded = []; 
+    public $timestamps = false; 
 
     /**
      * Get peminjaman/booking records for this barang

@@ -119,7 +119,7 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold small text-secondary">UPLOAD SURAT (PDF/IMG)</label>
+                                                <label class="form-label fw-bold small text-secondary">UPLOAD SURAT (PDF/IMG) <span class="text-danger" style="font-size: 0.8em;">(Max: 2MB)</span></label>
                                                 <input type="file" name="file_surat" class="form-control bg-light" accept=".pdf,.jpg,.jpeg,.png" required>
                                             </div>
                                         </div>

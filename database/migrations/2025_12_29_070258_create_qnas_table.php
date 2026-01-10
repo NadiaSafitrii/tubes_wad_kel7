@@ -14,7 +14,8 @@ return new class extends Migration
     Schema::create('qnas', function (Blueprint $table) {
         $table->id();
         
-        $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+        $table->integer('user_id');
+        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         $table->string('subjek');
         $table->text('pertanyaan');
         $table->text('jawaban')->nullable();

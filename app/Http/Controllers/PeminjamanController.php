@@ -66,7 +66,7 @@ class PeminjamanController extends Controller
     {
         $peminjamans = Peminjaman::with(['barang', 'user'])
                         ->where('status_approval', 'Pending')
-                        ->orderBy('created_at', 'desc')
+                        ->orderBy('id', 'desc')
                         ->get();
 
         return view('admin_verifikasi', compact('peminjamans'));
@@ -110,7 +110,7 @@ class PeminjamanController extends Controller
     public function qnaMahasiswa()
     {
         // Ambil data QnA milik user yang sedang login, urutkan dari yang terbaru
-        $dataQna = Qna::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        $dataQna = Qna::where('user_id', Auth::id())->orderBy('id', 'desc')->get();
         
         return view('mahasiswa_qna', compact('dataQna'));
     }
@@ -138,7 +138,7 @@ class PeminjamanController extends Controller
     {
         $riwayats = Peminjaman::with('barang')
                         ->where('user_id', Auth::id())
-                        ->orderBy('created_at', 'desc')
+                        ->orderBy('id', 'desc')
                         ->get();
 
         return view('mahasiswa_riwayat', compact('riwayats'));
@@ -148,7 +148,7 @@ class PeminjamanController extends Controller
     {
         $peminjamans = Peminjaman::with('barang')
                         ->where('user_id', Auth::id())
-                        ->orderBy('created_at', 'desc')
+                        ->orderBy('id', 'desc')
                         ->get();
 
         return view('status', compact('peminjamans')); 
@@ -158,7 +158,7 @@ class PeminjamanController extends Controller
     {
         $peminjamans = Peminjaman::with('barang')
                         ->where('user_id', Auth::id())
-                        ->orderBy('created_at', 'desc')
+                        ->orderBy('id', 'desc')
                         ->get();
 
         return view('partials.status_list', compact('peminjamans'))->render();
