@@ -112,7 +112,7 @@
                                     <th>Barang</th>
                                     <th>Jadwal</th>
                                     <th>Keperluan</th>
-                                    <th>Bukti</th>
+                                    <th class="text-center">Bukti</th>
                                     <th class="text-center">Keputusan</th>
                                 </tr>
                             </thead>
@@ -129,28 +129,34 @@
                                         <small class="d-block text-muted">Kembali: {{ $p->tgl_kembali }}</small>
                                     </td>
                                     <td><small>{{ $p->keperluan }}</small></td>
-                                    <td>
-                                        <a href="{{ asset('uploads/'.$p->file_surat) }}" target="_blank" class="btn btn-sm btn-outline-info">
-                                            <i class="fas fa-file-pdf"></i> Cek
-                                        </a>
-                                    </td>
                                     <td class="text-center">
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <form action="{{ route('admin.approve', $p->id) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Setujui peminjaman ini?')">
-                                                    <i class="fas fa-check"></i>
-                                                </button>
-                                            </form>
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="{{ asset('storage/' . $p->file_surat) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-eye"></i> Lihat
+                                                </a>
+                                                <a href="{{ asset('storage/' . $p->file_surat) }}" download="Bukti_{{ $p->nama }}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-download"></i> Ekspor
+                                                </a>
+                                            </div>
+                                        </td>
 
-                                            <form action="{{ route('admin.reject', $p->id) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tolak peminjaman ini?')">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                        <td class="text-center">
+                                            @if($p->status_approval == 'Pending')
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <form action="{{ route('admin.peminjaman.approve', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                                    </form>
+                                                    <form action="{{ route('admin.peminjaman.reject', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                                    </form>
+                                                </div>
+                                            @else
+                                                <span class="badge {{ $p->status_approval == 'Approved' ? 'bg-success' : 'bg-danger' }} px-3 py-2">
+                                                    {{ $p->status_approval }}
+                                                </span>
+                                            @endif
                                 </tr>
                                 @empty
                                 <tr>

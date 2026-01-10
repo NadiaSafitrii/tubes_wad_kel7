@@ -109,6 +109,7 @@ class PeminjamanController extends Controller
         $barangs = Barang::all();
         return view('mahasiswa_ketersediaan', compact('barangs'));
     }
+    
 
     // Cek status pengajuan (Tracking) 
     public function status()
@@ -143,25 +144,38 @@ class PeminjamanController extends Controller
 
     public function store(Request $request)
     {
+        // 1. Validasi Input (Termasuk berkas pendukung sesuai Poin 2b)
         $request->validate([
-            'barang_id'   => 'required',
-            'tgl_pinjam'  => 'required|date',
-            'file_surat'  => 'required|mimes:pdf,jpg,png|max:2048'
+            'barang_id'  => 'required|exists:barangs,id',
+            'nim'        => 'required',
+            'nama'       => 'required',
+            'tgl_pinjam' => 'required|date',
+            'tgl_kembali'=> 'required|date|after_or_equal:tgl_pinjam',
+            'file_surat' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', // Poin 2b
         ]);
 
-        $fileName = time() . '_' . $request->file('file_surat')->getClientOriginalName();
-        $request->file('file_surat')->move(public_path('uploads'), $fileName);
+        // 2. Proses Unggah Berkas Berkas Pendukung (Poin 2b & 3b)
+        $path = null;
+        if ($request->hasFile('file_surat')) {
+            // Berkas disimpan di folder storage/app/public/surat_peminjaman
+            $path = $request->file('file_surat')->store('surat_peminjaman', 'public');
+        }
 
-        Peminjaman::create([
-            'user_id'         => Auth::id(),
-            'barang_id'       => $request->barang_id,
-            'tgl_pinjam'      => $request->tgl_pinjam,
-            'tgl_kembali'     => $request->tgl_kembali,
-            'keperluan'       => $request->keperluan,
-            'file_surat'      => $fileName,
-            'status_approval' => 'Pending',
-        ]);
-         return back()->with('success', 'Berhasil mengajukan pinjaman! Silakan cek menu Status untuk tracking peminjaman.');
+        // 3. Simpan ke Database (Rancangan Operasi CRUD Poin 3b)
+       Peminjaman::create([
+        'user_id' => Auth::id(),
+        'barang_id' => $request->barang_id,
+        'nama' => $request->nama,
+        'nim' => $request->nim,
+        'tgl_pinjam' => $request->tgl_pinjam,
+        'tgl_kembali' => $request->tgl_kembali, // Pastikan baris ini ada!
+        'durasi' => $request->durasi,
+        'keperluan' => $request->keperluan,
+        'file_surat' => $path,
+        'status_approval' => 'Pending',
+    ]);
+
+        return redirect()->back()->with('success', 'Pengajuan peminjaman berhasil dikirim!');
     }
 
     public function destroy($id)

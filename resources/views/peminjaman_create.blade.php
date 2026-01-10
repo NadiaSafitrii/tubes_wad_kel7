@@ -72,7 +72,17 @@
                                 <form action="{{ route('peminjaman.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold small text-secondary">NIM MAHASISWA</label>
+                                            <input type="text" name="nim" class="form-control bg-light" 
+                                                value="{{ Auth::user()->nim }}" readonly>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold small text-secondary">NAMA PEMINJAM</label>
+                                            <input type="text" name="nama" class="form-control bg-light" 
+                                                value="{{ Auth::user()->name }}" readonly>
+                                        </div>
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold small text-secondary">BARANG YANG DIPINJAM</label>
                                                 <select name="barang_id" class="form-select bg-light" required>
@@ -170,5 +180,20 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.querySelector('input[name="nim"]').addEventListener('blur', function() {
+        let nim = this.value;
+        if (nim) {
+            fetch(`/api/peminjaman/identitas/${nim}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 'success') {
+                        // Pastikan id input nama di form Anda adalah 'nama_peminjam'
+                        document.getElementById('nama_peminjam').value = result.data.nama;
+                    }
+                });
+        }
+    });
+</script>
 </body>
 </html>

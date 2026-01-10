@@ -51,16 +51,23 @@
         <div class="col-md-10 p-0">
             <div class="admin-header d-flex justify-content-between align-items-center">
                 <h4 class="m-0 fw-bold text-dark fs-5">Forum Tanya Jawab (QnA)</h4>
-                <div class="user-info">
-                    <span class="me-2 fw-bold small text-dark">Halo, {{ Auth::user()->name }}</span>
-                    <i class="fas fa-user-circle fa-2x text-secondary align-middle"></i>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <a href="{{ url('/api/qna/export-pdf') }}" class="btn btn-outline-danger btn-sm fw-bold shadow-sm">
+                        <i class="fas fa-file-pdf me-2"></i> Export Buku Panduan
+                    </a>
+
+                    <div class="user-info border-start ps-3">
+                        <span class="me-2 fw-bold small text-dark">Halo, {{ Auth::user()->name }}</span>
+                        <i class="fas fa-user-circle fa-2x text-secondary align-middle"></i>
+                    </div>
                 </div>
             </div>
 
             <div class="container px-4">
                 
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show mb-4">
+                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm">
                         <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -69,21 +76,21 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-white fw-bold py-3 text-danger">
+                            <div class="card-header bg-white fw-bold py-3 text-danger border-bottom">
                                 <i class="fas fa-pen-fancy me-2"></i> Buat Pertanyaan Baru
                             </div>
                             <div class="card-body">
                                 <form action="{{ route('qna.store') }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
-                                        <label class="form-label small fw-bold text-secondary">SUBJEK / JUDUL</label>
-                                        <input type="text" name="subjek" class="form-control bg-light" placeholder="Contoh: Durasi Pinjam." required>
+                                        <label class="form-label small fw-bold text-secondary text-uppercase" style="letter-spacing: 1px;">Subjek / Judul</label>
+                                        <input type="text" name="subjek" class="form-control bg-light border-0" placeholder="Contoh: Prosedur Peminjaman" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small fw-bold text-secondary">ISI PERTANYAAN</label>
-                                        <textarea name="pertanyaan" class="form-control bg-light" rows="5" placeholder="Tulis detail pertanyaan Anda..." required></textarea>
+                                        <label class="form-label small fw-bold text-secondary text-uppercase" style="letter-spacing: 1px;">Isi Pertanyaan</label>
+                                        <textarea name="pertanyaan" class="form-control bg-light border-0" rows="5" placeholder="Tulis detail pertanyaan Anda sebagai Tiket Pertanyaan..." required></textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-danger w-100 fw-bold">
+                                    <button type="submit" class="btn btn-danger w-100 fw-bold py-2 shadow-sm">
                                         <i class="fas fa-paper-plane me-2"></i> Kirim Pertanyaan
                                     </button>
                                 </form>
@@ -92,38 +99,42 @@
                     </div>
 
                     <div class="col-md-8">
-                        <h5 class="fw-bold mb-3 text-secondary"><i class="fas fa-history me-2"></i> Riwayat Pertanyaan Saya</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-secondary">
+                                <i class="fas fa-history me-2"></i> Riwayat Pertanyaan Saya
+                            </h5>
+                        </div>
                         
                         @forelse($dataQna as $q)
                             <div class="card border-0 shadow-sm mb-3 card-qna">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h6 class="fw-bold text-dark mb-0">{{ $q->subjek }}</h6>
-                                        <small class="text-muted">{{ $q->created_at->format('d M Y, H:i') }}</small>
+                                        <small class="text-muted small">{{ $q->created_at->format('d M Y, H:i') }}</small>
                                     </div>
-                                    <p class="text-secondary mb-3">{{ $q->pertanyaan }}</p>
+                                    <p class="text-secondary mb-3" style="font-size: 0.95rem;">{{ $q->pertanyaan }}</p>
 
                                     @if($q->jawaban)
-                                        <div class="alert card-reply mb-0 p-3">
+                                        <div class="alert card-reply mb-0 p-3 border-0">
                                             <div class="d-flex">
                                                 <i class="fas fa-user-tie text-success me-3 mt-1"></i>
                                                 <div>
-                                                    <strong class="text-success d-block mb-1">Balasan Admin:</strong>
+                                                    <strong class="text-success d-block mb-1 small text-uppercase">Balasan Admin:</strong>
                                                     <span class="text-dark">{{ $q->jawaban }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     @else
-                                        <div class="bg-light p-2 rounded text-muted small">
-                                            <i class="fas fa-clock me-2"></i> <em>Menunggu respon dari admin...</em>
+                                        <div class="bg-light p-2 rounded text-muted small border-start border-3">
+                                            <i class="fas fa-clock me-2"></i> <em>Menunggu respon terstruktur dari admin...</em>
                                         </div>
                                     @endif
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-5 text-muted">
-                                <i class="fas fa-comments fa-3x mb-3 text-secondary"></i>
-                                <p>Anda belum pernah mengajukan pertanyaan.</p>
+                            <div class="text-center py-5 bg-white rounded shadow-sm border">
+                                <i class="fas fa-comments fa-3x mb-3 text-light"></i>
+                                <p class="text-muted">Anda belum memiliki Tiket Pertanyaan.</p>
                             </div>
                         @endforelse
 

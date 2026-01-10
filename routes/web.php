@@ -35,20 +35,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/qna', [QnaController::class, 'indexAdmin'])->name('admin.qna');
     Route::put('/admin/qna/{id}/jawab', [QnaController::class, 'jawab'])->name('admin.jawab');
     Route::delete('/admin/qna/{id}/hapus', [QnaController::class, 'destroy'])->name('admin.hapus');
+
+    // Route keputusan Admin
+    Route::post('/admin/peminjaman/approve/{id}', [App\Http\Controllers\PeminjamanController::class, 'approve'])->name('admin.peminjaman.approve');
+    Route::post('/admin/peminjaman/reject/{id}', [App\Http\Controllers\PeminjamanController::class, 'reject'])->name('admin.peminjaman.reject');
     
     
     // ==========================================
     // BAGIAN MAHASISWA 
     // ==========================================
 
-    // Dashboard & Cek Ketersediaan Barang
+    // 1. Dashboard & Cek Ketersediaan Barang
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
     
     // 2. Cek Ketersediaan (Daftar Barang dengan Search/Filter)
-    Route::get('/mahasiswa/ketersediaan', [BarangController::class, 'search'])->name('mahasiswa.ketersediaan');
+    Route::get('/mahasiswa/ketersediaan', [PeminjamanController::class, 'ketersediaanMahasiswa'])->name('mahasiswa.ketersediaan');
     
     // 3. Detail Barang dengan Kalender
-    Route::get('/mahasiswa/barang/{id}', [BarangController::class, 'show'])->name('barang.show');
+    Route::get('/mahasiswa/barang/{id}', [PeminjamanController::class, 'show'])->name('barang.show');
     
     // 4. API Kalender Booking (JSON)
     Route::get('/mahasiswa/barang/{id}/calendar', [BarangController::class, 'getBookingSchedule'])->name('barang.calendar');
