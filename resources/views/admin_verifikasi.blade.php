@@ -168,6 +168,69 @@
                                 </tbody>
                             </table>
                         </div>
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Peminjam</th>
+                                    <th>Barang</th>
+                                    <th>Jadwal</th>
+                                    <th>Keperluan</th>
+                                    <th class="text-center">Bukti</th>
+                                    <th class="text-center">Keputusan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($peminjamans as $p)
+                                <tr>
+                                    <td>
+                                        <strong>{{ $p->user->name ?? 'User #'.$p->user_id }}</strong><br>
+                                        <small class="text-muted">NIM: {{ $p->user->nim ?? '-' }}</small>
+                                    </td>
+                                    <td>{{ $p->barang->nama_barang ?? 'Barang Dihapus' }}</td>
+                                    <td>
+                                        <small class="d-block text-muted">Pinjam: {{ $p->tgl_pinjam }}</small>
+                                        <small class="d-block text-muted">Kembali: {{ $p->tgl_kembali }}</small>
+                                    </td>
+                                    <td><small>{{ $p->keperluan }}</small></td>
+                                    <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="{{ asset('storage/' . $p->file_surat) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-eye"></i> Lihat
+                                                </a>
+                                                <a href="{{ asset('storage/' . $p->file_surat) }}" download="Bukti_{{ $p->nama }}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-download"></i> Ekspor
+                                                </a>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if($p->status_approval == 'Pending')
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <form action="{{ route('admin.peminjaman.approve', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                                    </form>
+                                                    <form action="{{ route('admin.peminjaman.reject', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                                    </form>
+                                                </div>
+                                            @else
+                                                <span class="badge {{ $p->status_approval == 'Approved' ? 'bg-success' : 'bg-danger' }} px-3 py-2">
+                                                    {{ $p->status_approval }}
+                                                </span>
+                                            @endif
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i><br>
+                                        Tidak ada pengajuan baru saat ini.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
