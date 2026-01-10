@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Feedback;
+use Illuminate\Support\Facades\Auth;
+
+class FeedbackController extends Controller
+{
+    public function store(Request $request)
+    {
+       
+        $request->validate([
+            'peminjaman_id' => 'required|exists:peminjamans,id',
+            'rating'        => 'required|integer|min:1|max:5',
+            'komentar'      => 'nullable|string'
+        ]);
+       
+        Feedback::create([
+            'peminjaman_id' => $request->peminjaman_id,
+            'user_id'       => Auth::id(),
+            'rating'        => $request->rating,
+            'komentar'      => $request->komentar,
+        ]);
+
+        return back()->with('success', 'Terima kasih! Feedback Anda telah tersimpan.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        
+        $request->validate([
+            'rating'   => 'required|integer|min:1|max:5',
+            'komentar' => 'nullable|string'
+        ]);
+        
+        $feedback = Feedback::where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
+        
+        $feedback->update([
+            'rating'   => $request->rating,
+            'komentar' => $request->komentar,
+        ]);
+
+        return back()->with('success', 'Ulasan Anda berhasil diperbarui!');
+    }
+    
+    public function destroy($id)
+    {
+        
+        $feedback = Feedback::where('id', $id)
+                            ->where('user_id', Auth::id()) 
+                            ->firstOrFail();
+        
+        $feedback->delete();
+
+        return back()->with('success', 'Ulasan berhasil dihapus.');
+    }
+}

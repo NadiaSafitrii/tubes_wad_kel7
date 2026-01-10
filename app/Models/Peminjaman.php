@@ -8,19 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Peminjaman extends Model
 {
     use HasFactory;
+    
     protected $guarded = [];
     protected $table = 'peminjamans';
     public $timestamps = false; 
 
-    
-    public function user()
+        public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    
     public function barang()
     {
         return $this->belongsTo(Barang::class);
+    }
+
+    public function feedback()
+    {
+        
+        return $this->hasOne(Feedback::class, 'peminjaman_id');
     }
 }
