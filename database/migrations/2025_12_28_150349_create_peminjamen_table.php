@@ -26,7 +26,13 @@ return new class extends Migration
         $table->string('durasi')->nullable(); 
         $table->text('keperluan');
         $table->string('file_surat')->nullable(); 
+
+        // Penyesuaian Poin 5: Pastikan status menggunakan Approved agar tombol cetak PDF aktif
         $table->enum('status_approval', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+        
+        // Tambahan pelengkap: Catatan penolakan (opsional tapi sangat membantu jika statusnya 'Rejected')
+        $table->text('catatan_admin')->nullable(); 
+
         $table->timestamps();
     });
     }
@@ -36,6 +42,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjaman');
+        // Perbaikan kecil: Sesuaikan nama tabel dengan yang di atas ('peminjamans')
+        Schema::dropIfExists('peminjamans');
     }
 };
