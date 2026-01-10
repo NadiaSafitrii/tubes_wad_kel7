@@ -31,19 +31,23 @@
             </div>
 
             <nav>
-                <a href="{{ url('/ketersediaan') }}">
+                <a href="{{ url('/ketersediaan') }}" class="{{ request()->is('ketersediaan*') ? 'active' : '' }}">
                     <i class="fas fa-box-open me-2"></i> Kelola Barang
                 </a>
                 
-                <a href="{{ route('admin.verifikasi') }}">
+                <a href="{{ route('admin.verifikasi') }}" class="{{ request()->routeIs('admin.verifikasi') ? 'active' : '' }}">
                     <i class="fas fa-clipboard-check me-2"></i> Verifikasi Peminjaman
                 </a>
 
-                <a href="{{ route('admin.qna') }}" class="active">
+                <a href="{{ route('admin.riwayat.index') }}" class="{{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
+                    <i class="fas fa-history me-2"></i> Semua Riwayat
+                </a>
+
+                <a href="{{ route('admin.qna') }}" class="{{ request()->routeIs('admin.qna') ? 'active' : '' }}">
                     <i class="fas fa-comments me-2"></i> Jawab QnA
                 </a>
 
-                 <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
+                <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
                     <button type="submit" class="btn btn-link text-danger text-decoration-none ps-3 pt-3 w-100 text-start">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
