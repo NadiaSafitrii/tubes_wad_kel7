@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'bunga@student.telkomuniversity.ac.id',
             'password' => Hash::make('bunga123'), 
             'role' => 'peminjam',
-            'nim' => '123456789',
+            'nim' => '102022400182',
         ]);
     }
 }

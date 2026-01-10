@@ -32,6 +32,7 @@
             color: #b30000;
             padding-left: 25px; 
         }
+        /* Style Menu Aktif Merah */
         .sidebar .active {
             background-color: #b30000;
             color: white !important;
@@ -67,22 +68,26 @@
             </div>
 
             <nav>
-                <a href="{{ url('/ketersediaan') }}" class="active">
+                <a href="{{ url('/ketersediaan') }}" class="{{ request()->is('ketersediaan*') ? 'active' : '' }}">
                     <i class="fas fa-box-open me-2"></i> Kelola Barang
                 </a>
                 
-                <a href="{{ route('admin.verifikasi') }}">
+                <a href="{{ route('admin.verifikasi') }}" class="{{ request()->routeIs('admin.verifikasi') ? 'active' : '' }}">
                     <i class="fas fa-clipboard-check me-2"></i> Verifikasi Peminjaman
                 </a>
 
-                <a href="{{ route('admin.qna') }}">
+                <a href="{{ route('admin.riwayat.index') }}" class="{{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
+                    <i class="fas fa-history me-2"></i> Semua Riwayat
+                </a>
+
+                <a href="{{ route('admin.qna') }}" class="{{ request()->routeIs('admin.qna') ? 'active' : '' }}">
                     <i class="fas fa-comments me-2"></i> Jawab QnA
                 </a>
 
                 <form action="{{ route('logout') }}" method="POST" class="mt-5 border-top">
                     @csrf
                     <button type="submit" class="btn btn-link text-danger text-decoration-none ps-3 pt-3 w-100 text-start">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </button>
                 </form>
             </nav>
@@ -117,59 +122,61 @@
                         </a>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table table-striped table-hover mb-0 align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Barang</th>
-                                    <th>Lokasi</th>
-                                    <th>Spesifikasi</th>
-                                    <th>Status</th>
-                                    <th class="text-center" width="150">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($barangs as $index => $b)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td class="fw-bold">{{ $b->nama_barang }}</td>
-                                    <td>{{ $b->lokasi }}</td>
-                                    <td><small class="text-muted">{{ $b->spesifikasi }}</small></td>
-                                    <td>
-                                        @if($b->status == 'Tersedia')
-                                            <span class="badge bg-success">Tersedia</span>
-                                        @elseif($b->status == 'Dipinjam')
-                                            <span class="badge bg-warning text-dark">Dipinjam</span>
-                                        @else
-                                            <span class="badge bg-danger">Perbaikan</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('barang.edit', $b->id) }}" class="btn btn-sm btn-warning text-white" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            
-                                            <form action="{{ route('barang.destroy', $b->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
-                                        <i class="fas fa-box-open fa-3x mb-3 text-secondary"></i><br>
-                                        Belum ada data barang. Silakan tambah data baru.
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0 align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Barang</th>
+                                        <th>Lokasi</th>
+                                        <th>Spesifikasi</th>
+                                        <th>Status</th>
+                                        <th class="text-center" width="150">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($barangs as $index => $b)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td class="fw-bold">{{ $b->nama_barang }}</td>
+                                        <td>{{ $b->lokasi }}</td>
+                                        <td><small class="text-muted">{{ $b->spesifikasi }}</small></td>
+                                        <td>
+                                            @if($b->status == 'Tersedia')
+                                                <span class="badge bg-success">Tersedia</span>
+                                            @elseif($b->status == 'Dipinjam')
+                                                <span class="badge bg-warning text-dark">Dipinjam</span>
+                                            @else
+                                                <span class="badge bg-danger">Perbaikan</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('barang.edit', $b->id) }}" class="btn btn-sm btn-warning text-white" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                
+                                                <form action="{{ route('barang.destroy', $b->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5 text-muted">
+                                            <i class="fas fa-box-open fa-3x mb-3 text-secondary"></i><br>
+                                            Belum ada data barang. Silakan tambah data baru.
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

@@ -18,13 +18,11 @@
         .badge-approved { background-color: #198754; color: #fff; }
         .badge-rejected { background-color: #dc3545; color: #fff; }
         
-       
         .star-rating { direction: rtl; display: inline-block; padding: 10px; }
         .star-rating input { display: none; }
         .star-rating label { color: #bbb; font-size: 2rem; padding: 0; cursor: pointer; transition: 0.3s; }
         .star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label { color: #f2b600; }
         .text-warning-star { color: #f2b600; }
-        
         
         .comment-text { 
             white-space: normal; 
@@ -33,6 +31,7 @@
             margin: 0 auto;
             font-style: italic;
         }
+        .swal2-popup { border-radius: 15px !important; }
     </style>
 </head>
 <body>
@@ -77,19 +76,23 @@
                     <div class="card-body p-3">
                         <form action="{{ route('mahasiswa.riwayat') }}" method="GET" class="row g-2 align-items-center">
                             <div class="col-md-3">
-                                <label class="small fw-bold text-muted">FILTER STATUS</label>
-                                <select name="status" class="form-select form-select-sm border-0 bg-light">
-                                    <option value="">Semua Status</option>
-                                    <option value="Approved">Approved</option>
-                                    <option value="Rejected">Rejected</option>
-                                </select>
+                                <label class="small fw-bold text-muted">CARI BARANG</label>
+                                <input type="text" name="search" class="form-control form-control-sm border-0 bg-light" placeholder="Nama barang..." value="{{ request('search') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="small fw-bold text-muted">CARI BARANG</label>
-                                <input type="text" name="search" class="form-control form-control-sm border-0 bg-light" placeholder="Nama barang...">
+                                <label class="small fw-bold text-muted">TANGGAL PINJAM</label>
+                                <input type="date" name="tanggal" class="form-control form-control-sm border-0 bg-light" value="{{ request('tanggal') }}">
                             </div>
-                            <div class="col-md-2 mt-4">
-                                <button type="submit" class="btn btn-danger btn-sm w-100 rounded-pill">Terapkan</button>
+                            <div class="col-md-6 mt-4 d-flex gap-2">
+                                <button type="submit" class="btn btn-danger btn-sm px-3 rounded-pill flex-fill">
+                                    <i class="fas fa-filter me-1"></i> Terapkan
+                                </button>
+                                <a href="{{ route('mahasiswa.riwayat') }}" class="btn btn-secondary btn-sm px-3 rounded-pill flex-fill text-center">
+                                    <i class="fas fa-undo me-1"></i> Reset
+                                </a>
+                                <a href="{{ route('riwayat.export') }}" class="btn btn-outline-danger btn-sm px-3 rounded-pill flex-fill text-center">
+                                    <i class="fas fa-file-pdf me-1"></i> Export PDF
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -97,13 +100,6 @@
 
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show mb-4 border-start border-5 border-success">
-                                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
                         <div class="table-responsive">
                             <table class="table table-hover align-middle">
                                 <thead class="table-custom">
@@ -116,9 +112,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($riwayats as $index => $r)
+                                    @forelse($riwayats as $index => $r)
                                     <tr>
-                                        <td class="ps-3 fw-bold">{{ $index + 1 }}</td>
+                                        <td class="ps-3 fw-bold">{{ $riwayats->firstItem() + $index }}</td>
                                         <td>
                                             <h6 class="mb-0 fw-bold">{{ $r->barang->nama_barang }}</h6>
                                             <small class="text-muted">ID: #{{ $r->id }}</small>
@@ -141,17 +137,16 @@
                                                         @endfor
                                                     </div>
                                                     <div class="small text-muted mb-2 comment-text">"{{ $r->feedback->komentar }}"</div>
-                                                    
                                                     <div class="d-flex justify-content-center gap-2">
                                                         <button class="btn btn-sm btn-outline-primary border-0" data-bs-toggle="modal" data-bs-target="#editFeedbackModal{{ $r->feedback->id }}">
-                                                            <i class="fas fa-edit fa-lg"></i>
+                                                            <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <form action="{{ route('feedback.destroy', $r->feedback->id) }}" method="POST">
+                                                        <form id="delete-form-{{ $r->feedback->id }}" action="{{ route('feedback.destroy', $r->feedback->id) }}" method="POST" style="display:none;">
                                                             @csrf @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0" onclick="return confirm('Hapus ulasan ini?')">
-                                                                <i class="fas fa-trash fa-lg"></i>
-                                                            </button>
                                                         </form>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger border-0 btn-delete" data-id="{{ $r->feedback->id }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
                                                     </div>
                                                 @else
                                                     <button class="btn btn-sm btn-outline-warning rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#feedbackModal{{ $r->id }}">
@@ -163,12 +158,16 @@
                                             @endif
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5 text-muted">Belum ada riwayat peminjaman yang ditemukan.</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-3">
-                            {{ $riwayats->links() }}
+                        <div class="mt-4 d-flex justify-content-center">
+                            {{ $riwayats->appends(request()->input())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
@@ -237,5 +236,41 @@
 @endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Konfirmasi Hapus
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            Swal.fire({
+                title: 'Hapus Ulasan?',
+                text: "Ulasan yang dihapus tidak bisa dikembalikan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#b30000',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        });
+    });
+
+    // Alert Sukses
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            confirmButtonColor: '#b30000',
+            timer: 3000,
+            timerProgressBar: true
+        });
+    @endif
+</script>
 </body>
 </html>

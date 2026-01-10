@@ -8,18 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Feedback extends Model
 {
     use HasFactory;
-    
     protected $table = 'feedbacks';
-    
-    protected $fillable = [
-        'peminjaman_id',
-        'user_id',
-        'rating',
-        'komentar'
-    ];
+    protected $fillable = ['peminjaman_id', 'user_id', 'rating', 'komentar']; // Gunakan komentar
 
-    public function peminjaman()
-    {
+    public function peminjaman() {
         return $this->belongsTo(Peminjaman::class);
     }
 }
