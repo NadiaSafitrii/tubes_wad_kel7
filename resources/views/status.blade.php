@@ -113,6 +113,14 @@
                                                                 Permintaan peminjaman <strong>{{ $item->barang->nama_barang }}</strong> 
                                                                 untuk tanggal <strong>{{ \Carbon\Carbon::parse($item->tgl_pinjam)->format('d M Y') }}</strong> 
                                                                 telah <strong>{{ $statusText }}</strong> oleh Admin.
+
+                                                                @if($item->status_approval == 'Approved')
+                                                                    <div class="mt-2">
+                                                                        <a href="{{ route('peminjaman.cetak', $item->id) }}" class="btn btn-sm btn-dark shadow-sm">
+                                                                            <i class="fas fa-file-pdf me-1"></i> Cetak Bukti PDF
+                                                                        </a>
+                                                                    </div>
+                                                                @endif
                                                             </div>
 
                                                             <form action="{{ route('peminjaman.destroy', $item->id) }}" method="POST">

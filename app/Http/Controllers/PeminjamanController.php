@@ -8,6 +8,7 @@ use App\Models\Barang;
 use App\Models\Qna;
 use Illuminate\Support\Facades\Auth; 
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf; 
 
 class PeminjamanController extends Controller
 {
@@ -211,4 +212,44 @@ class PeminjamanController extends Controller
 
     return back()->with('success', 'Pertanyaan kamu berhasil dikirim!');
 }
+
+// ==========================================
+    // 4. FITUR CETAK BUKTI (POIN 5)
+    // ==========================================
+
+    public function cetakBukti($id)
+    {
+        // 1. Ambil data dengan relasi barang
+        $peminjaman = Peminjaman::with('barang')->findOrFail($id);
+
+        // 2. Validasi Keamanan: Pastikan hanya pemilik atau admin yang bisa cetak
+        if ($peminjaman->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            return abort(403, 'Akses ditolak.');
+        }
+
+        // 3. Validasi Poin 5: Tombol cetak aktif jika status "Approved" (Disetujui)
+        if ($peminjaman->status_approval !== 'Approved') {
+            return back()->with('error', 'Bukti hanya dapat dicetak jika status sudah disetujui.');
+        }
+
+        // 4. Pemanfaatan API Carbon untuk manipulasi tanggal 
+        // Contoh: Mengubah format tanggal pinjam ke format lokal Indonesia
+        $tanggal_cetak = Carbon::now()->translatedFormat('d F Y');
+        $tgl_pinjam_format = Carbon::parse($peminjaman->tgl_pinjam)->translatedFormat('l, d F Y');
+        $tgl_kembali_format = Carbon::parse($peminjaman->tgl_kembali)->translatedFormat('l, d F Y');
+
+        // 5. Siapkan data untuk dikirim ke view PDF
+        $data = [
+            'peminjaman' => $peminjaman,
+            'tgl_cetak'  => $tanggal_cetak,
+            'tgl_pinjam' => $tgl_pinjam_format,
+            'tgl_kembali'=> $tgl_kembali_format,
+        ];
+
+        // 6. Generate PDF 
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('peminjaman_pdf', $data);
+
+        // 7. Jenis Keluaran: Lembar PDF untuk ditunjukkan ke petugas logistik
+        return $pdf->download('Bukti_Pinjam_' . $peminjaman->nama . '.pdf');
+    }
 }

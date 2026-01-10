@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     // Status Tracking
     Route::get('/mahasiswa/status', [PeminjamanController::class, 'status'])->name('peminjaman.status');
     Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
+    Route::get('/peminjaman/cetak/{id}', [App\Http\Controllers\PeminjamanController::class, 'cetakBukti'])->name('peminjaman.cetak');
 
     // Riwayat & QnA Mahasiswa
     Route::get('/mahasiswa/riwayat', [PeminjamanController::class, 'riwayatMahasiswa'])->name('mahasiswa.riwayat');
