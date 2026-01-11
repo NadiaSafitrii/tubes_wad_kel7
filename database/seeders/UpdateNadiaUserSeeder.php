@@ -13,7 +13,6 @@ class UpdateNadiaUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Update Nadia
         $nadia = User::where('nama_lengkap', 'like', '%Nadia Sapitri%')->first();
         if ($nadia) {
             $nadia->email = 'nadia@student.telkomuniversity.ac.id';
@@ -21,10 +20,9 @@ class UpdateNadiaUserSeeder extends Seeder
             $nadia->save();
             $this->command->info('Updated Nadia: Email set to nadia@student.telkomuniversity.ac.id, Password set to nadia123');
         } else {
-            // Create if not exists (optional, but good for robustness)
             $nadia = User::create([
                 'nama_lengkap' => 'Nadia Sapitri',
-                'nim_nip' => '102022400063', // Assuming this NIM based on previous find
+                'nim_nip' => '102022400063', 
                 'email' => 'nadia@student.telkomuniversity.ac.id',
                 'password' => Hash::make('nadia123'),
                 'role' => 'peminjam',

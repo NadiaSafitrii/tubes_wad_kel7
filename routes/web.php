@@ -52,14 +52,12 @@ Route::middleware(['auth'])->group(function () {
     // BAGIAN MAHASISWA 
     // ==========================================
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
-    Route::get('/mahasiswa/ketersediaan', [BarangController::class, 'search'])->name('mahasiswa.ketersediaan');
-    Route::get('/mahasiswa/barang/{id}', [BarangController::class, 'show'])->name('barang.show');
 
     // 1. Dashboard 
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
     
     // 2. Cek Ketersediaan (Daftar Barang dengan Search/Filter)
-    Route::get('/mahasiswa/ketersediaan', [PeminjamanController::class, 'ketersediaanMahasiswa'])->name('mahasiswa.ketersediaan');
+    Route::get('/mahasiswa/ketersediaan', [BarangController::class, 'search'])->name('mahasiswa.ketersediaan');
     
     // 3. Detail Barang dengan Kalender
     Route::get('/mahasiswa/barang/{id}', [PeminjamanController::class, 'show'])->name('barang.show');
