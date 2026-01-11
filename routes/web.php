@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/verifikasi', [PeminjamanController::class, 'index'])->name('admin.verifikasi');
     Route::post('/admin/verifikasi/{id}/approve', [PeminjamanController::class, 'approve'])->name('admin.approve');
     Route::post('/admin/verifikasi/{id}/reject', [PeminjamanController::class, 'reject'])->name('admin.reject');
+    Route::post('/admin/verifikasi/{id}/complete', [PeminjamanController::class, 'complete'])->name('admin.complete');
 
     // QnA Admin
     Route::get('/admin/qna', [QnaController::class, 'indexAdmin'])->name('admin.qna');

@@ -75,7 +75,6 @@
                                     <option value="Elektronik" {{ request('kategori') == 'Elektronik' ? 'selected' : '' }}>Elektronik</option>
                                     <option value="Ruangan" {{ request('kategori') == 'Ruangan' ? 'selected' : '' }}>Ruangan</option>
                                     <option value="Audio" {{ request('kategori') == 'Audio' ? 'selected' : '' }}>Audio</option>
-                                    <option value="Lainnya" {{ request('kategori') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                                 </select>
                             </div>
                             <div class="col-md-2">

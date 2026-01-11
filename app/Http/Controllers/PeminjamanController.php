@@ -80,7 +80,12 @@ class PeminjamanController extends Controller
                         ->orderBy('id', 'desc')
                         ->get();
 
-        return view('admin_verifikasi', compact('peminjamans'));
+        $approved_pinjams = Peminjaman::with(['barang', 'user'])
+                        ->where('status_approval', 'Approved')
+                        ->orderBy('id', 'desc')
+                        ->get();
+
+        return view('admin_verifikasi', compact('peminjamans', 'approved_pinjams'));
     }
 
     // Admin Approve
@@ -101,6 +106,19 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->update(['status_approval' => 'Rejected']);
         return redirect()->route('admin.verifikasi')->with('success', 'Pengajuan ditolak.');
+    }
+
+    // Admin Selesai (Barang Kembali)
+    public function complete($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->update(['status_approval' => 'Selesai']);
+        
+        // Kembalikan status barang jadi Tersedia
+        $barang = Barang::findOrFail($peminjaman->barang_id);
+        $barang->update(['status' => 'Tersedia']);
+
+        return redirect()->route('admin.verifikasi')->with('success', 'Barang telah dikembalikan dan status menjadi Tersedia.');
     }
 
     // ==========================================

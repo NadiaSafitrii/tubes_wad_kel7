@@ -20,7 +20,7 @@ return new class extends Migration
         $table->integer('durasi')->nullable(); 
         $table->text('keperluan');
         $table->string('file_surat')->nullable(); 
-        $table->enum('status_approval', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+        $table->enum('status_approval', ['Pending', 'Approved', 'Rejected', 'Selesai'])->default('Pending');
         $table->timestamps();
     });
 }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjamen');
+        Schema::dropIfExists('peminjamans');
     }
 };

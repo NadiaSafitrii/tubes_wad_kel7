@@ -165,6 +165,52 @@
                     </div>
                 </div>
 
+                <!-- Bagian Barang Sedang Dipinjam (Untuk dikembalikan) -->
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="m-0 font-weight-bold text-success">Sedang Dipinjam (Aktif)</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Peminjam</th>
+                                    <th>Barang</th>
+                                    <th>Jadwal Kembali</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($approved_pinjams as $ap)
+                                <tr>
+                                    <td>
+                                        <strong>{{ $ap->user->name ?? 'User #'.$ap->user_id }}</strong>
+                                    </td>
+                                    <td>{{ $ap->barang->nama_barang ?? 'Barang Dihapus' }}</td>
+                                    <td>{{ $ap->tgl_kembali }}</td>
+                                    <td><span class="badge bg-success">Dipinjam</span></td>
+                                    <td class="text-center">
+                                        <form action="{{ route('admin.complete', $ap->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary btn-sm px-3" onclick="return confirm('Konfirmasi barang sudah dikembalikan?')">
+                                                <i class="fas fa-undo-alt me-2"></i> Selesai / Dikembalikan
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        Tidak ada barang yang sedang dipinjam.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
