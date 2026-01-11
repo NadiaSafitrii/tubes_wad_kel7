@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf; // API DomPDF
+use Barryvdh\DomPDF\Facade\Pdf; 
 
 class RiwayatController extends Controller
 {
-    // Method untuk Dashboard Mahasiswa (Penyebab Error di Gambar)
     public function index()
     {
         $riwayats = Peminjaman::with(['barang', 'feedback'])
@@ -21,7 +20,6 @@ class RiwayatController extends Controller
         return view('mahasiswa_riwayat', compact('riwayats'));
     }
 
-    // Method untuk Dashboard Admin
     public function indexAdmin()
     {
         $riwayats = Peminjaman::with(['barang', 'user', 'feedback'])
@@ -32,7 +30,6 @@ class RiwayatController extends Controller
         return view('admin_riwayat', compact('riwayats')); 
     }
 
-    // 4. Sumber API: DomPDF untuk Export PDF (Laporan LPJ)
     public function exportPdf()
     {
         $riwayats = Peminjaman::with(['barang', 'user'])
@@ -43,7 +40,6 @@ class RiwayatController extends Controller
         return $pdf->download('laporan_peminjaman_lpj.pdf');
     }
 
-    // 5. Jenis Keluaran: EXCEL (CSV) - Rapi seperti gambar Excel kamu
     public function export()
     {
         $riwayats = Peminjaman::with(['barang', 'user', 'feedback'])->get();
@@ -59,7 +55,6 @@ class RiwayatController extends Controller
 
         $callback = function() use($riwayats) {
             $file = fopen('php://output', 'w');
-            // Header kolom sesuai gambar Excel kamu
             fputcsv($file, ['NO', 'MAHASISWA', 'NIM', 'BARANG', 'TANGGAL', 'STATUS', 'RATING', 'KOMENTAR']);
             
             foreach ($riwayats as $index => $r) {

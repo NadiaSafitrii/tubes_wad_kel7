@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold text-secondary text-uppercase" style="letter-spacing: 1px;">Isi Pertanyaan</label>
-                                        <textarea name="pertanyaan" class="form-control bg-light border-0" rows="5" placeholder="Tulis detail pertanyaan Anda sebagai Tiket Pertanyaan..." required></textarea>
+                                        <textarea name="pertanyaan" class="form-control bg-light border-0" rows="5" placeholder="Tulis detail pertanyaan Anda." required></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-danger w-100 fw-bold py-2 shadow-sm">
                                         <i class="fas fa-paper-plane me-2"></i> Kirim Pertanyaan
@@ -134,7 +134,7 @@
                         @empty
                             <div class="text-center py-5 bg-white rounded shadow-sm border">
                                 <i class="fas fa-comments fa-3x mb-3 text-light"></i>
-                                <p class="text-muted">Anda belum memiliki Tiket Pertanyaan.</p>
+                                <p class="text-muted">Anda belum memiliki pertanyaan.</p>
                             </div>
                         @endforelse
 

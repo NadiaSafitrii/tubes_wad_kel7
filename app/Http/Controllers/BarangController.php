@@ -69,7 +69,6 @@ class BarangController extends Controller
     {
         $barang = Barang::findOrFail($id);
         
-        // Get approved bookings for this item
         $bookings = Peminjaman::where('barang_id', $id)
             ->where('status_approval', 'Approved')
             ->get();
@@ -77,7 +76,7 @@ class BarangController extends Controller
         return view('barang_detail', compact('barang', 'bookings'));
     }
 
-    // 7. API untuk mendapatkan jadwal booking (untuk FullCalendar)
+    // 7. API untuk mendapatkan jadwal booking 
     public function getBookingSchedule($id)
     {
         $bookings = Peminjaman::with('user')
@@ -85,14 +84,14 @@ class BarangController extends Controller
             ->where('status_approval', 'Approved')
             ->get();
 
-        // Format untuk FullCalendar
+
         $events = $bookings->map(function ($booking) {
             return [
                 'id' => $booking->id,
                 'title' => 'Dipinjam: ' . ($booking->user->name ?? 'User'),
                 'start' => $booking->tgl_pinjam,
-                'end' => date('Y-m-d', strtotime($booking->tgl_kembali . ' +1 day')), // FullCalendar end date is exclusive
-                'color' => '#dc3545', // Red color for booked dates
+                'end' => date('Y-m-d', strtotime($booking->tgl_kembali . ' +1 day')), 
+                'color' => '#dc3545', 
                 'extendedProps' => [
                     'keperluan' => $booking->keperluan,
                     'peminjam' => $booking->user->name ?? 'User'

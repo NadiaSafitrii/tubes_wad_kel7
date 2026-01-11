@@ -3,17 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User; // Mengambil dari tabel users sebagai simulasi
+use App\Models\User; 
 use Illuminate\Http\Request;
 
 class PeminjamanApiController extends Controller
 {
-    /**
-     * [SIMULASI SSO] Mengambil data identitas peminjam (Poin 4)
-     */
+
     public function getIdentitas($nim)
     {
-        // Simulasi mencari data mahasiswa berdasarkan NIM
         $user = User::where('nim', $nim)->first();
 
         if ($user) {

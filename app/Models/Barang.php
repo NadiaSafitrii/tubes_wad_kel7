@@ -11,9 +11,6 @@ class Barang extends Model
     
     protected $guarded = []; 
 
-    /**
-     * Get peminjaman/booking records for this barang
-     */
     public function peminjamans()
     {
         return $this->hasMany(Peminjaman::class);

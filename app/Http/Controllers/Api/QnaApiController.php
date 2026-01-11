@@ -5,20 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Qna;
 use Illuminate\Http\Request;
-// Pastikan baris ini tetap ada untuk mengimpor library PDF
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class QnaApiController extends Controller
-{
-    /**
-     * [READ & SEARCH] Sesuai Poin 3b & 4: Custom Search API
-     * Menggunakan filter untuk pencarian kata kunci pada pertanyaan atau subjek.
-     */
+{ 
     public function index(Request $request)
     {
         $query = Qna::query();
 
-        // Implementasi Poin 4: Custom Search
         if ($request->has('search')) {
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
@@ -36,9 +30,6 @@ class QnaApiController extends Controller
         ], 200);
     }
 
-    /**
-     * [CREATE] Sesuai Poin 3c: Membuat "Tiket Pertanyaan"
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -61,9 +52,6 @@ class QnaApiController extends Controller
         ], 201);
     }
 
-    /**
-     * [UPDATE] Sesuai Poin 3d: Admin merespons secara terstruktur
-     */
     public function update(Request $request, $id)
     {
         $qna = Qna::find($id);
@@ -84,9 +72,6 @@ class QnaApiController extends Controller
         ], 200);
     }
 
-    /**
-     * [DELETE] Sesuai Poin 3e: Menghapus data tidak relevan
-     */
     public function destroy($id)
     {
         $qna = Qna::find($id);
@@ -103,12 +88,8 @@ class QnaApiController extends Controller
         ], 200);
     }
 
-    /**
-     * [EXPORT] Sesuai Poin 5: Generate Buku Panduan Peminjaman (PDF)
-     */
     public function exportPdf()
     {
-        // Mengecek apakah library DomPDF sudah terinstal dengan benar
         if (!class_exists('Barryvdh\DomPDF\Facade\Pdf')) {
             return response()->json([
                 'status' => 'error',

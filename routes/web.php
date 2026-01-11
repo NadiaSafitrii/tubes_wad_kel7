@@ -34,18 +34,18 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/qna/{id}/jawab', [QnaController::class, 'jawab'])->name('admin.jawab');
     Route::delete('/admin/qna/{id}/hapus', [QnaController::class, 'destroy'])->name('admin.hapus');
 
-    // Route keputusan Admin
+    // VERIFIKASI ADMIN
     Route::post('/admin/peminjaman/approve/{id}', [App\Http\Controllers\PeminjamanController::class, 'approve'])->name('admin.peminjaman.approve');
     Route::post('/admin/peminjaman/reject/{id}', [App\Http\Controllers\PeminjamanController::class, 'reject'])->name('admin.peminjaman.reject');
     
-    // BAGIAN RIWAYAT ADMIN
+    // RIWAYAT ADMIN
     Route::get('/admin/riwayat', [RiwayatController::class, 'indexAdmin'])->name('admin.riwayat.index'); 
     Route::delete('/admin/riwayat/hapus/{id}', [RiwayatController::class, 'destroyAdmin'])->name('admin.riwayat.destroy');
 
-    // 5. JENIS KELUARAN: EXCEL (CSV) - Mengarah ke RiwayatController@export
+    // JENIS KELUARAN: EXCEL (CSV)
     Route::get('/admin/export-riwayat', [RiwayatController::class, 'export'])->name('admin.riwayat.export');
 
-    // 4. SUMBER API: DomPDF untuk Export PDF (Fix Error image_618350.jpg)
+    // SUMBER API: DomPDF untuk Export PDF
     Route::get('/admin/export-pdf', [RiwayatController::class, 'exportPdf'])->name('barang.exportPdf');
 
     // ==========================================
@@ -55,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mahasiswa/ketersediaan', [BarangController::class, 'search'])->name('mahasiswa.ketersediaan');
     Route::get('/mahasiswa/barang/{id}', [BarangController::class, 'show'])->name('barang.show');
 
-    // 1. Dashboard & Cek Ketersediaan Barang
+    // 1. Dashboard 
     Route::get('/mahasiswa/dashboard', [PeminjamanController::class, 'dashboardMahasiswa'])->name('mahasiswa.dashboard');
     
     // 2. Cek Ketersediaan (Daftar Barang dengan Search/Filter)
@@ -67,18 +67,18 @@ Route::middleware(['auth'])->group(function () {
     // 4. API Kalender Booking (JSON)
     Route::get('/mahasiswa/barang/{id}/calendar', [BarangController::class, 'getBookingSchedule'])->name('barang.calendar');
 
-    // Pengajuan Pinjam & Status 
+    // 5. Pengajuan Pinjam & Status 
     Route::get('/pinjam/ajukan', [PeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post('/pinjam/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
     Route::get('/mahasiswa/status', [PeminjamanController::class, 'status'])->name('peminjaman.status');
     Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
     Route::get('/peminjaman/cetak/{id}', [App\Http\Controllers\PeminjamanController::class, 'cetakBukti'])->name('peminjaman.cetak');
 
-    // FITUR RIWAYAT MAHASISWA (Fix Error image_61e567.jpg & image_61ecc9.jpg)
+    // 6. Fitur Riwayat Mahasiswa
     Route::get('/mahasiswa/riwayat', [RiwayatController::class, 'index'])->name('mahasiswa.riwayat');
     Route::get('/mahasiswa/riwayat/export', [RiwayatController::class, 'exportPdf'])->name('riwayat.export');
     
-    // QnA & Feedback
+    // 7. QnA & Feedback
     Route::get('/mahasiswa/qna', [PeminjamanController::class, 'qnaMahasiswa'])->name('mahasiswa.qna');
     Route::post('/mahasiswa/qna/store', [PeminjamanController::class, 'storeQna'])->name('qna.store');
 
