@@ -9,8 +9,10 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\RiwayatController; 
 
 // --- 1. HALAMAN LOGIN ---
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('login'); 
+Route::get('/', [AuthController::class, 'showLoginForm']);
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
