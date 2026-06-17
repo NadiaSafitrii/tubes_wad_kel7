@@ -178,7 +178,7 @@
                 @foreach($bookings as $index => $booking)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $booking->user->name ?? '-' }}</td>
+                    <td>{{ $booking->nama ?? ($booking->user->name ?? '-') }}</td>
                     <td>{{ \Carbon\Carbon::parse($booking->tgl_pinjam)->format('d M Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($booking->tgl_kembali)->format('d M Y') }}</td>
                     <td>{{ Str::limit($booking->keperluan, 50) }}</td>

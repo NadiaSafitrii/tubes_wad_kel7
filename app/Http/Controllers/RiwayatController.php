@@ -9,12 +9,24 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class RiwayatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $riwayats = Peminjaman::with(['barang', 'feedback'])
+        $query = Peminjaman::with(['barang', 'feedback'])
             ->where('user_id', Auth::id())
-            ->whereIn('status_approval', ['Approved', 'Rejected'])
-            ->orderBy('created_at', 'desc')
+            ->whereIn('status_approval', ['Approved', 'Rejected']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('barang', function ($q) use ($search) {
+                $q->where('nama_barang', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tgl_pinjam', $request->tanggal);
+        }
+
+        $riwayats = $query->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('mahasiswa_riwayat', compact('riwayats'));
@@ -60,8 +72,8 @@ class RiwayatController extends Controller
             foreach ($riwayats as $index => $r) {
                 fputcsv($file, [
                     $index + 1, 
-                    $r->user->name, 
-                    $r->user->nim ?? '-', 
+                    $r->nama ?? $r->user->name, 
+                    $r->nim ?? ($r->user->nim ?? '-'), 
                     $r->barang->nama_barang, 
                     $r->tgl_pinjam, 
                     $r->status_approval,

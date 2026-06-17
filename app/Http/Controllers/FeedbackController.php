@@ -13,7 +13,7 @@ class FeedbackController extends Controller
         $request->validate([
             'peminjaman_id' => 'required|exists:peminjamans,id',
             'rating'        => 'required|integer|min:1|max:5',
-            'ulasan'        => 'nullable|string' 
+            'komentar'      => 'nullable|string' 
         ]);
 
         $exists = Feedback::where('peminjaman_id', $request->peminjaman_id)->exists();
@@ -25,7 +25,7 @@ class FeedbackController extends Controller
             'peminjaman_id' => $request->peminjaman_id,
             'user_id'       => Auth::id(),
             'rating'        => $request->rating,
-            'ulasan'        => $request->ulasan, 
+            'komentar'      => $request->komentar, 
         ]);
 
         return back()->with('success', 'Terima kasih! Feedback Anda telah tersimpan.');
@@ -35,7 +35,7 @@ class FeedbackController extends Controller
     {
         $request->validate([
             'rating'   => 'required|integer|min:1|max:5',
-            'ulasan'   => 'nullable|string' 
+            'komentar' => 'nullable|string' 
         ]);
 
         $feedback = Feedback::where('id', $id)
@@ -44,7 +44,7 @@ class FeedbackController extends Controller
 
         $feedback->update([
             'rating'   => $request->rating,
-            'ulasan'   => $request->ulasan, 
+            'komentar' => $request->komentar, 
         ]);
 
         return back()->with('success', 'Ulasan Anda berhasil diperbarui!');

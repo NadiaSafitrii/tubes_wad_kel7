@@ -69,19 +69,31 @@
                                     </div>
                                 @endif
 
+                                @if($errors->any())
+                                    <div class="alert alert-danger alert-dismissible fade show mb-4 border-0 border-start border-danger border-5">
+                                        <h6 class="fw-bold mb-1"><i class="fas fa-exclamation-triangle me-2"></i> Pengajuan Gagal dikirim:</h6>
+                                        <ul class="mb-0 ps-3">
+                                            @foreach($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                @endif
+
                                 <form action="{{ route('peminjaman.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
                                         <div class="mb-3">
                                             <label class="form-label fw-bold small text-secondary">NIM MAHASISWA</label>
                                             <input type="text" name="nim" class="form-control bg-light" 
-                                                value="{{ Auth::user()->nim }}" readonly>
+                                                value="{{ Auth::user()->nim }}">
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label fw-bold small text-secondary">NAMA PEMINJAM</label>
-                                            <input type="text" name="nama" class="form-control bg-light" 
-                                                value="{{ Auth::user()->name }}" readonly>
+                                            <input type="text" id="nama_peminjam" name="nama" class="form-control bg-light" 
+                                                value="{{ Auth::user()->name }}">
                                         </div>
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold small text-secondary">BARANG YANG DIPINJAM</label>

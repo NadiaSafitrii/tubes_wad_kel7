@@ -116,8 +116,8 @@
                                     @forelse($peminjamans as $p)
                                     <tr>
                                         <td>
-                                            <strong>{{ $p->user->name ?? 'User #'.$p->user_id }}</strong><br>
-                                            <small class="text-muted">NIM: {{ $p->user->nim ?? '-' }}</small>
+                                            <strong>{{ $p->nama ?? ($p->user->name ?? 'User #'.$p->user_id) }}</strong><br>
+                                            <small class="text-muted">NIM: {{ $p->nim ?? ($p->user->nim ?? '-') }}</small>
                                         </td>
                                         <td>{{ $p->barang->nama_barang ?? 'Barang Dihapus' }}</td>
                                         <td>

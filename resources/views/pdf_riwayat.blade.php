@@ -31,7 +31,7 @@
             @foreach($riwayats as $index => $r)
             <tr>
                 <td style="text-align: center;">{{ $index + 1 }}</td>
-                <td>{{ $r->user->name }} ({{ $r->user->nim ?? '-' }})</td>
+                <td>{{ $r->nama ?? $r->user->name }} ({{ $r->nim ?? ($r->user->nim ?? '-') }})</td>
                 <td>{{ $r->barang->nama_barang }}</td>
                 <td>{{ \Carbon\Carbon::parse($r->tgl_pinjam)->format('d M Y') }}</td>
                 <td>{{ $r->status_approval }}</td>

@@ -119,8 +119,8 @@
                                     <tr>
                                         <td class="text-center fw-bold text-secondary">{{ $riwayats->firstItem() + $index }}</td>
                                         <td>
-                                            <div class="fw-bold text-dark">{{ $r->user->name }}</div>
-                                            <small class="text-muted">{{ $r->user->nim ?? 'NIM tidak ada' }}</small>
+                                            <div class="fw-bold text-dark">{{ $r->nama ?? $r->user->name }}</div>
+                                            <small class="text-muted">{{ $r->nim ?? ($r->user->nim ?? 'NIM tidak ada') }}</small>
                                         </td>
                                         <td>
                                             <div class="fw-bold text-dark">{{ $r->barang->nama_barang }}</div>

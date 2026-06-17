@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Peminjaman; 
 use App\Models\Barang;
 use App\Models\Qna;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth; 
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf; 
@@ -160,8 +161,11 @@ class PeminjamanController extends Controller
                 ->store('surat_peminjaman', 'public');
         }
 
+        $user = User::where('nim', $request->nim)->first();
+        $userId = $user ? $user->id : Auth::id();
+
         Peminjaman::create([
-            'user_id'        => Auth::id(),
+            'user_id'        => $userId,
             'barang_id'      => $request->barang_id,
             'nama'           => $request->nama,
             'nim'            => $request->nim,
