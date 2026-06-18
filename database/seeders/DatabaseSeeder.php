@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
         // 2. Akun MAHASISWA
         User::create([
             'name' => 'Nadia Sapitri',
-            'email' => 'nadiasapitri@student.telkomuniversity.ac.id',
-            'password' => Hash::make('nadia123'), 
+            'email' => 'bunga@student.telkomuniversity.ac.id',
+            'password' => Hash::make('bunga123'), 
             'role' => 'peminjam',
             'nim' => '102022400063',
         ]);
